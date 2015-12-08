@@ -1,0 +1,34 @@
+{
+  "name": "sonder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franxyzxyz/sonder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/franxyzxyz/sonder/issues"
+  },
+  "homepage": "https://github.com/franxyzxyz/sonder#readme",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.1",
+    "connect": "^3.4.0",
+    "debug": "^2.2.0",
+    "dotenv": "^1.2.0",
+    "email-regex": "^1.0.0",
+    "express": "^4.13.3",
+    "method-override": "^2.3.5",
+    "morgan": "^1.6.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "seraph": "^0.14.0",
+    "seraph-model": "^0.7.5"
+  }
+}
