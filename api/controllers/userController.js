@@ -1,4 +1,8 @@
-var User = require('../models/User')
+var User        = require('../models/User')
+var bcrypt      = require('bcrypt-nodejs');
+var jwt         = require('jsonwebtoken');
+var expressJWT  = require('express-jwt')
+var passport    = require("passport");
 
 function getAll(req, res){
   User.findAll(function(err, users){
@@ -6,12 +10,12 @@ function getAll(req, res){
   })
 }
 
-function createUser(req, res){
-  var newUser = req.body
-  User.save(newUser, function(err, user){
-    if(err) return res.status(409).json(err);
-    res.status(200).json({user: user})
-  })
+function postSignup(req, res, next){
+  passport.authenticate('local-signup',function(err, callback, message){
+    if (err) throw err;
+    if (!callback) return res.status(401).json({success: false, message: message.message});
+    res.status(200).json({success: true, user: callback, message: message.message})
+  })(req, res, next)
 }
 
 function getOne(req, res){
@@ -42,10 +46,37 @@ function deleteUser(req, res){
   })
 }
 
+function postLogin(req, res, next){
+  passport.authenticate('local-login',function(err, callback, message){
+    if (err) throw err;
+    if (!callback) return res.status(401).json({message: message.message})
+
+    var user = callback;
+
+    var myInfo = {username: user[0].username, id: user[0].id}
+    var newToken = genToken(myInfo);
+    res.status(200).json({success: true, token: newToken})
+  })(req, res, next)
+}
+
+function genToken(userInfo){
+  var token = jwt.sign(userInfo, process.env.JWT_SECRET);
+  return token
+}
+
+function encrypt (password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+function validPassword(password, basePassword) {
+  return bcrypt.compareSync(password, basePassword);
+};
+
 module.exports = {
-  getAll      : getAll,
-  createUser  : createUser,
-  getOne      : getOne,
-  updateUser  : updateUser,
-  deleteUser  : deleteUser
+  getAll        : getAll,
+  getOne        : getOne,
+  updateUser    : updateUser,
+  deleteUser    : deleteUser,
+  postSignup    : postSignup,
+  postLogin     : postLogin
 }
