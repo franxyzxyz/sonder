@@ -23,13 +23,16 @@ function isEventAuthorized(req, res, next){
 function dbQuery(req, res, next, cypher, params){
   db.query(cypher, params, function(err, result){
     if (err) return res.status(401).json({error: err});
+    if (result.length == 0) return res.status(401).json({error: 'Not a valid id'});
+
     if (result[0].username !== req.user.username) return res.status(401).json({success: false, error: 'Account not authorized for the action'});
     return next();
   })
 }
 
+
 module.exports = {
-  isUserAuthorized : isUserAuthorized,
-  isStageAuthorized     : isStageAuthorized,
-  isEventAuthorized: isEventAuthorized
+  isUserAuthorized  : isUserAuthorized,
+  isStageAuthorized : isStageAuthorized,
+  isEventAuthorized : isEventAuthorized,
 }
