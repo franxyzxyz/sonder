@@ -2,6 +2,22 @@ var Event       = require('../models/Event')
 var Stage       = require('../models/Stage')
 var Q           = require("q");
 
+function getEvents(req, res){
+  var cypher = "START user = node({id})"
+             + "MATCH user -[:has_stage]-> stage -[r:has_event]-> event "
+             + "RETURN event";
+  Q.nfcall(checkNodeType, req.params, 'user')
+   .then(function(){
+    db.query(cypher, {id: parseInt(req.params.user_id)}, function(err, result){
+      if (err) return res.status(401).json({error: err})
+      res.status(200).json({success:true, no_of_events: result.length, events: result})
+    })
+   })
+   .catch(function(error){
+      res.status(401).json({success: false, message: error});
+   })
+}
+
 function addEvent(req, res){
   var newEvent = req.body;
   newEvent.date = new Date(newEvent.date);
@@ -36,7 +52,6 @@ function getEvent(req, res){
     res.status(200).json({ success: true, event: event })
   })
 }
-
 
 function updateEvent(req, res){
   var cypher = "START event = node({id})"
@@ -80,6 +95,16 @@ function deleteEvent(req, res){
   })
 }
 
+function checkNodeType(params, type, callback){
+  db.readLabels(params[type + '_id'], function(err, label){
+    if (!label || label.indexOf(type) == -1) return callback('Invalid ' + type + ' id');
+    if (type == 'stage'){
+      return callback(null, true)
+    }
+    return checkNodeType(params, 'stage', callback)
+  })
+}
+
 function fieldsValidation(body, result, callback){
   for (prop in body){
     if (Object.keys(result[0].event).indexOf(prop) == -1) throw 'fields unmatch';
@@ -104,6 +129,7 @@ function dateValidation(date){
 }
 
 module.exports = {
+  getEvents     : getEvents,
   addEvent      : addEvent,
   getEvent      : getEvent,
   updateEvent   : updateEvent,
