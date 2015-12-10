@@ -50,11 +50,34 @@ function checkEventNode(req, res, next){
     return next();
   })
 }
+
+function checkFavRel(req, res, next){
+  db.rel.read(req.params.favourite_id, function(err, rel){
+    if (!rel || rel.type !== 'favourites') return res.status(401).json({success: false, error: 'Invalid favourite id'});
+    return userRelAuth(rel.start, req, res, next)
+  })
+}
+
+function checkLikeRel(req, res, next){
+  db.rel.read(req.params.like_id, function(err, rel){
+    if (!rel || rel.type !== 'likes') return res.status(401).json({success: false, error: 'Invalid like id'});
+    return userRelAuth(rel.start, req, res, next)
+  })
+}
+
+function userRelAuth(id, req, res, next){
+  var cypher = "START x = node({id})"
+             + "RETURN x";
+  dbQuery(req, res, next, cypher, {id: parseInt(id)})
+}
+
 module.exports = {
   isUserAuthorized  : isUserAuthorized,
   isStageAuthorized : isStageAuthorized,
   isEventAuthorized : isEventAuthorized,
   checkUserNode     : checkUserNode,
   checkStageNode    : checkStageNode,
-  checkEventNode    : checkEventNode
+  checkEventNode    : checkEventNode,
+  checkFavRel       : checkFavRel,
+  checkLikeRel      : checkLikeRel
 }
