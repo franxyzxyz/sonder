@@ -5,11 +5,11 @@ var stageController = require('../controllers/stageController');
 
 router.route('/:user_id/stages')
   .get(stageController.getAllStages)
-  .post(stageController.addStage)
+  .post(stageController.isUserAuthorized, stageController.addStage)
 
 router.route('/stage/:stage_id')
   .get(stageController.getOneStage)
-  .put(stageController.updateStage)
-  .delete(stageController.deleteStage)
+  .put(stageController.isAuthorized, stageController.updateStage)
+  .delete(stageController.isAuthorized, stageController.deleteStage)
 
 module.exports = router

@@ -15,7 +15,8 @@ function getAllStages(req, res){
 
 function getOneStage(req, res){
   Stage.read(req.params.stage_id, function(err, stage){
-    if (err) return res.status(401).json({error: err});
+    if (err) return res.status(401).json({success: false, error: err});
+    if (!stage) return res.status(401).json({success: false, error: 'Invalid stage id'});
     res.status(200).json({success: true, stage: stage})
   })
 }
@@ -26,8 +27,13 @@ function addStage(req, res){
   newStage.end = new Date(newStage.end);
 
   Stage.save(newStage, function(err, stage){
-    if (err) return res.status(401).json({ success:false, error: err});
+    if (err) return res.status(401).json({ success: false, error: err});
     db.relate(req.params.user_id, 'has_stage', stage.id, function(err, rel){
+      if (err) {
+        db.delete(stage.id, true, function(error){
+          res.status(401).json({ success: false, error: error})
+        })
+      }
       res.status(200).json({ success: true, relationship: rel, stage: stage})
     })
   })
@@ -35,6 +41,8 @@ function addStage(req, res){
 
 function updateStage(req, res){
   Stage.read(req.params.stage_id, function(err, stage){
+    if (!stage) return res.status(401).json({success: false, error: 'Invalid stage id'});
+
     var updateStage   = req.body;
     stage.start       = new Date(updateStage.start);
     stage.end         = new Date(updateStage.end);
@@ -51,9 +59,35 @@ function updateStage(req, res){
 }
 
 function deleteStage(req, res){
-  db.delete(req.params.stage_id, true, function(err){
-    if(err) return res.status(401).json({success: false, error: err});
-    res.status(200).json({ success: true })
+  Stage.read(req.params.stage_id, function(err, stage){
+    if (!stage) return res.status(401).json({success: false, error: 'Invalid stage id'});
+
+    db.delete(req.params.stage_id, true, function(err){
+      if(err) return res.status(401).json({success: false, error: err});
+      res.status(200).json({ success: true })
+    })
+  })
+}
+
+function isUserAuthorized(req, res, next){
+  var cypher = "START x = node({id})"
+             + "RETURN x";
+  dbQuery(req, res, next, cypher, {id: parseInt(req.params.user_id)})
+}
+
+function isAuthorized(req, res, next){
+  var cypher = "START x = node({id})"
+             + "MATCH n -[r]-> x "
+             + "WHERE TYPE(r) = {type}"
+             + "RETURN n";
+  dbQuery(req, res, next, cypher, {id: parseInt(req.params.stage_id), type:'has_stage'})
+}
+
+function dbQuery(req, res, next, cypher, params){
+  db.query(cypher, params, function(err, result){
+    if (err) return res.status(401).json({error: err});
+    if (result[0].username !== req.user.username) return res.status(401).json({success: false, error: 'Account not authorized for the action'});
+    return next();
   })
 }
 
@@ -65,9 +99,11 @@ function validateDate(start, end){
 }
 
 module.exports = {
-  getAllStages : getAllStages,
-  getOneStage  : getOneStage,
-  addStage     : addStage,
-  updateStage  : updateStage,
-  deleteStage  : deleteStage
+  getAllStages     : getAllStages,
+  getOneStage      : getOneStage,
+  addStage         : addStage,
+  updateStage      : updateStage,
+  deleteStage      : deleteStage,
+  isAuthorized     : isAuthorized,
+  isUserAuthorized : isUserAuthorized
 }
