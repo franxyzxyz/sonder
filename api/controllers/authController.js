@@ -33,14 +33,28 @@ function dbQuery(req, res, next, cypher, params){
 function checkUserNode(req, res, next){
   db.readLabels(req.params.user_id, function(err, label){
     if (!label || label.indexOf('user') == -1) return res.status(401).json({success: false, error: 'Invalid user id'});
-
     return next();
   })
 }
 
+function checkStageNode(req, res, next){
+  db.readLabels(req.params.stage_id, function(err, label){
+    if (!label || label.indexOf('stage') == -1) return res.status(401).json({success: false, error: 'Invalid stage id'});
+    return next();
+  })
+}
+
+function checkEventNode(req, res, next){
+  db.readLabels(req.params.event_id, function(err, label){
+    if (!label || label.indexOf('event') == -1) return res.status(401).json({success: false, error: 'Invalid event id'});
+    return next();
+  })
+}
 module.exports = {
   isUserAuthorized  : isUserAuthorized,
   isStageAuthorized : isStageAuthorized,
   isEventAuthorized : isEventAuthorized,
-  checkUserNode     : checkUserNode
+  checkUserNode     : checkUserNode,
+  checkStageNode    : checkStageNode,
+  checkEventNode    : checkEventNode
 }

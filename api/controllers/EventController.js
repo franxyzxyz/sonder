@@ -10,16 +10,10 @@ function getStageEvents(req, res){
   }else{
     cypher += "RETURN event";
   }
-  Q.nfcall(checkNodeType, req.params, 'user')
-   .then(function(){
-    db.query(cypher, {id: parseInt(req.params.user_id), stage_id: parseInt(req.params.stage_id)}, function(err, result){
-      if (err) return res.status(401).json({error: err.message})
-      res.status(200).json({success:true, no_of_events: result.length, events: result})
-    })
-   })
-   .catch(function(error){
-      res.status(401).json({success: false, message: error});
-   })
+  db.query(cypher, {id: parseInt(req.params.user_id), stage_id: parseInt(req.params.stage_id)}, function(err, result){
+    if (err) return res.status(401).json({error: err.message})
+    res.status(200).json({success:true, no_of_events: result.length, events: result})
+  })
 }
 
 function addEvent(req, res){
@@ -50,7 +44,6 @@ function addEvent(req, res){
 function getEvent(req, res){
   Event.read(req.params.event_id, function(err, event){
     if (err) return res.status(401).json({ success: false, error: err });
-    if (!event) return res.status(401).json({ success: false, error: 'Invalid event id' });
     res.status(200).json({ success: true, event: event })
   })
 }
@@ -62,7 +55,6 @@ function updateEvent(req, res){
   var updateEvent = req.body;
   db.query(cypher, {id: parseInt(req.params.event_id)}, function(err, result){
     if (err) return res.status(401).json({ success: false, error: err.message });
-    if (result.length == 0) return res.status(401).json({ success: false, error: 'Invalid event id' });
     Q.nfcall(fieldsValidate, updateEvent, result[0].stage)
      .then(function(){
       var event = result[0].event;
@@ -87,21 +79,10 @@ function updateEvent(req, res){
 function deleteEvent(req, res){
   Event.read(req.params.event_id, function(err, event){
     if (err) return res.status(401).json({ success: false, error: err });
-    if (!event) return res.status(401).json({ success: false, error: 'Invalid event id' });
     db.delete(req.params.event_id, true, function(err){
       if(err) return res.status(401).json({success: false, error: err.message});
       res.status(200).json({ success: true })
     });
-  })
-}
-
-function checkNodeType(params, type, callback){
-  db.readLabels(params[type + '_id'], function(err, label){
-    if (!label || label.indexOf(type) == -1) return callback('Invalid ' + type + ' id');
-    if (type == 'stage'){
-      return callback(null, true)
-    }
-    return checkNodeType(params, 'stage', callback)
   })
 }
 
