@@ -69,28 +69,6 @@ function deleteStage(req, res){
   })
 }
 
-function isUserAuthorized(req, res, next){
-  var cypher = "START x = node({id})"
-             + "RETURN x";
-  dbQuery(req, res, next, cypher, {id: parseInt(req.params.user_id)})
-}
-
-function isAuthorized(req, res, next){
-  var cypher = "START x = node({id})"
-             + "MATCH n -[r]-> x "
-             + "WHERE TYPE(r) = {type}"
-             + "RETURN n";
-  dbQuery(req, res, next, cypher, {id: parseInt(req.params.stage_id), type:'has_stage'})
-}
-
-function dbQuery(req, res, next, cypher, params){
-  db.query(cypher, params, function(err, result){
-    if (err) return res.status(401).json({error: err});
-    if (result[0].username !== req.user.username) return res.status(401).json({success: false, error: 'Account not authorized for the action'});
-    return next();
-  })
-}
-
 function validateDate(start, end){
   if (start > end) {
     return false
@@ -103,7 +81,5 @@ module.exports = {
   getOneStage      : getOneStage,
   addStage         : addStage,
   updateStage      : updateStage,
-  deleteStage      : deleteStage,
-  isAuthorized     : isAuthorized,
-  isUserAuthorized : isUserAuthorized
+  deleteStage      : deleteStage
 }
