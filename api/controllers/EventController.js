@@ -5,60 +5,74 @@ var Q           = require("q");
 function addEvent(req, res){
   var newEvent = req.body;
   newEvent.date = new Date(newEvent.date);
-  if (!eventDateValidation(newEvent.date)) return res.status(401).json({success: false, message: 'date is not valid'});
 
-  // Check if Event's date is within stage's start-end
   Stage.read(req.params.stage_id, function(err, stage){
-    if (newEvent.date < stage.start || newEvent.date > stage.end) return res.status(401).json({success: false, message: 'date of event is out of the range of the requested stage'});
-
-    // newEvent.tag is an array
-    Event.save(newEvent, function(err, event){
-      if (err) return res.status(401).json({ success: false, error: err });
-      db.relate(req.params.stage_id, 'has_event', event.id, function(err, rel){
-        if (err){
-          db.delete(event.id, true, function(error){
-            if (error) return res.status(401).json({ success: false, error: error });
-            return res.status(401).json({ success: false, error: err })
+    Q.nfcall(dateRangeValidation, newEvent.date, stage)
+     .then(dateValidation)
+     .then(function(){
+        Event.save(newEvent, function(err, event){
+          if (err) return res.status(401).json({ success: false, error: err });
+          db.relate(req.params.stage_id, 'has_event', event.id, function(err, rel){
+            if (err){
+              db.delete(event.id, true, function(error){
+                if (error) return res.status(401).json({ success: false, error: error });
+                return res.status(401).json({ success: false, error: err })
+              })
+            };
+            res.status(200).json({ success: true, event: event, relationship: rel})
           })
-        };
-        res.status(200).json({ success: true, event: event, relationship: rel})
-      })
-    })
+        })
+     })
+     .catch(function(error){
+      res.status(401).json({success: false, message: error});
+     })
   })
 }
 
 function getEvent(req, res){
   Event.read(req.params.event_id, function(err, event){
     if (err) return res.status(401).json({ success: false, error: err });
-    if (!event) return res.status(401).json({ success: false, error: 'not an event' });
+    if (!event) return res.status(401).json({ success: false, error: 'Invalid event id' });
     res.status(200).json({ success: true, event: event })
   })
 }
 
+
 function updateEvent(req, res){
-  Event.read(req.params.event_id, function(err, event){
-    var updateEvent = req.body;
-    if (!validateFields(updateEvent, event)) return res.status(401).json({success: false, message: 'fields unmatch'});
+  var cypher = "START event = node({id})"
+             + "MATCH stage -[r:has_event]-> event "
+             + "RETURN stage, event";
+  var updateEvent = req.body;
 
-    event.title        = updateEvent.title;
-    event.event_type   = updateEvent.event_type;
-    event.date         = new Date(updateEvent.date);
-    event.description  = updateEvent.description;
-    event.tag          = updateEvent.tag;
+  db.query(cypher, {id: parseInt(req.params.event_id)}, function(err, result){
+    if (err) return res.status(401).json({ success: false, error: err });
+    if (result.length == 0) return res.status(401).json({ success: false, error: 'Invalid event id' });
+    Q.nfcall(fieldsValidation, updateEvent, result)
+     .then(dateRangeValidation_q)
+     .then(function(){
+      var event = result[0].event;
 
-    if (!eventDateValidation(event.date)) return res.status(401).json({success: false, message: 'date is not valid'});
+      event.title        = updateEvent.title;
+      event.event_type   = updateEvent.event_type;
+      event.date         = new Date(updateEvent.date);
+      event.description  = updateEvent.description;
+      event.tag          = updateEvent.tag;
 
-    Event.save(event, function(err, event){
-      if (err) throw err;
-      res.status(200).json({success: true, event: event})
-    })
+      Event.save(event, function(err, event){
+        if (err) throw err;
+        res.status(200).json({success: true, event: event})
+      })
+     })
+     .catch(function(error){
+      res.status(401).json({success: false, message: error});
+     })
   })
 }
 
 function deleteEvent(req, res){
   Event.read(req.params.event_id, function(err, event){
     if (err) return res.status(401).json({ success: false, error: err });
-    if (!event) return res.status(401).json({ success: false, error: 'not an event' });
+    if (!event) return res.status(401).json({ success: false, error: 'Invalid event id' });
     db.delete(req.params.event_id, true, function(err){
       if(err) return res.status(401).json({success: false, error: err});
       res.status(200).json({ success: true })
@@ -66,43 +80,32 @@ function deleteEvent(req, res){
   })
 }
 
-function validateLabel(node_id, type){
-  db.readLabels(node_id, function(err, labels){
-    return Q.fcall(labelprocess, labels, type)
-     .then(function(value){
-      return value
-     }, function(err){
-      throw err
-     }).done();
-  })
-}
-
-function labelprocess(label, type){
-  if (label.indexOf(type) == -1){
-    return false
-  }else{
-    return true
-  }
-}
-
-function validateFields(body, event){
+function fieldsValidation(body, result, callback){
   for (prop in body){
-    if (Object.keys(event).indexOf(prop) == -1) return false;
+    if (Object.keys(result[0].event).indexOf(prop) == -1) throw 'fields unmatch';
   }
-  return true
+  callback(null, [body.date, result[0].stage])
 }
 
-function eventDateValidation(date){
-  if (date == 'Invalid Date'){
-    return false
-  }else{
-    return true
-  }
+function dateRangeValidation(date, stage, callback){
+  if (date < stage.start || date > stage.end) throw 'date of event is out of the range of the requested stage';
+  callback(null, date)
+}
+
+function dateRangeValidation_q(params){
+  var date  = new Date(params[0])
+  var stage = params[1]
+  if (date < stage.start || date > stage.end) throw 'date of event is out of the range of the requested stage';
+  return dateValidation(date)
+}
+
+function dateValidation(date){
+  if (date == 'Invalid Date') throw 'Invalid Date';
 }
 
 module.exports = {
   addEvent      : addEvent,
   getEvent      : getEvent,
   updateEvent   : updateEvent,
-  deleteEvent   : deleteEvent
+  deleteEvent   : deleteEvent,
 }
