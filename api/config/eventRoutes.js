@@ -5,8 +5,11 @@ var eventController = require('../controllers/eventController');
 var authController  = require('../controllers/authController')
 
 router.route('/:user_id/stage/:stage_id/events')
-  .get(eventController.getEvents)
+  .get(eventController.getStageEvents)
   .post(authController.isUserAuthorized, eventController.addEvent)
+
+router.route('/:user_id/events')
+  .get(eventController.getStageEvents)
 
 router.route('/event/:event_id')
   .get(eventController.getEvent)
