@@ -1,7 +1,10 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var seraphModel     = require('seraph-model');
 var User            = seraphModel(db, 'user');
+var UserSchema      = require('../models/User').schema;
 var bcrypt          = require('bcrypt-nodejs');
+var validation  = require('../helpers/validation')
+var Q               = require("q");
 
 module.exports = function(passport){
   passport.serializeUser(function(user, done) {
@@ -26,11 +29,17 @@ module.exports = function(passport){
         return callback(null, false, {message: 'username exists'})
       }else{
         var newUser = req.body;
-        newUser.password = encrypt(newUser.password);
-        User.save(newUser, function(err, user){
-          if (err) return callback(null, false, {message: err});
-          return callback(null, newUser, {message: 'successfully signed up'})
-        })
+        Q.nfcall(validation.fields, req.body, UserSchema, null)
+         .then(function(){
+           newUser.password = encrypt(newUser.password);
+           User.save(newUser, function(err, user){
+             if (err) return callback(null, false, {message: err});
+             return callback(null, newUser, {message: 'successfully signed up'})
+           })
+         })
+         .catch(function(error){
+          callback(null, false, {message: error})
+         })
       }
     })
   }));
@@ -40,14 +49,21 @@ module.exports = function(passport){
     passwordField: 'password',
     passReqToCallback : true
   },function(req, username, password, callback){
-    User.where({username: username}, function(err, user){
-      if (err) return callback(err);
-      if (!user) return callback(null, false, {message: 'cannot find user'});
+    var loginParams = req.body
+    Q.nfcall(validation.fields, loginParams, {username:null, password: null}, null)
+     .then(function(){
+      User.where({username: username}, function(err, user){
+        if (err) return callback(err);
+        if (user.length == 0) return callback(null, false, {message: 'cannot find user'});
 
-      if (!validPassword(password, user[0].password)) return callback(null, false, {message: 'password does not match'});
+        if (!validPassword(password, user[0].password)) return callback(null, false, {message: 'password does not match'});
 
-      return callback(null, user, {message: 'successfully logged in'});
-    })
+        return callback(null, user, {message: 'successfully logged in'});
+      })
+     })
+     .catch(function(error){
+       res.status(401).json({success: false, message: error});
+     })
   }))
 }
 

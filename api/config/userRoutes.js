@@ -9,7 +9,16 @@ router.route('/')
 
 router.route('/user/:user_id')
   .get(authController.checkUserNode, userController.getOne)
-  .put(authController.checkUserNode, userController.updateUser)
-  .delete(authController.checkUserNode, userController.deleteUser)
+  .put(authController.checkUserNode,
+       authController.isUserAuthorized,
+       userController.updateUser)
+  .delete(authController.checkUserNode,
+          authController.isUserAuthorized,
+          userController.deleteUser)
+
+router.route('/user/:user_id/password')
+  .put(authController.checkUserNode,
+       authController.isUserAuthorized,
+       userController.updatePassword)
 
 module.exports = router
