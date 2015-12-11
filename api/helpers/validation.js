@@ -14,7 +14,35 @@ function password(params, callback){
   callback(null)
 }
 
+function dateRange(params, callback){
+  var start = new Date(params.start);
+  var end   = new Date(params.end);
+
+  if (start == 'Invalid Date' || end == 'Invalid Date') throw 'Invalid Date';
+  if (new Date(params.start) > new Date(params.end)) throw 'start date cannot be later than the end date'
+  callback(null, true)
+}
+
+function multipleFields(newBody, standard, limitation, next, callback){
+  if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'fields unmatch';
+  for (prop in newBody){
+    if (Object.keys(standard).indexOf(prop) == -1) throw 'fields unmatch';
+  }
+
+  if (!next) {return callback(null)}
+  return next(newBody, limitation, callback)
+}
+
+function eventDateRange(newBody, stage, callback){
+  if (newBody.date == 'Invalid Date') throw 'Invalid Date';
+  if (newBody.date < stage.start || newBody.date > stage.end) throw 'date of event is out of the range of the requested stage';
+  callback(null)
+}
+
 module.exports = {
   fields   : fields,
-  password : password
+  multipleFields : multipleFields,
+  password : password,
+  dateRange: dateRange,
+  eventDateRange : eventDateRange,
 }

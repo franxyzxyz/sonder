@@ -1,5 +1,6 @@
 var Stage       = require('../models/Stage')
 var Q           = require("q");
+var validation  = require('../helpers/validation')
 
 function getAllStages(req, res){
   var cypher = "START x = node({id})"
@@ -20,8 +21,7 @@ function getOneStage(req, res){
 
 function addStage(req, res){
   var newStage = req.body
-
-  Q.nfcall(stageFieldsValidate, newStage)
+  Q.nfcall(validation.fields, newStage, Stage.schema, validation.dateRange)
    .then(function(){
     newStage.start = new Date(newStage.start);
     newStage.end = new Date(newStage.end);
@@ -46,7 +46,7 @@ function updateStage(req, res){
   Stage.read(req.params.stage_id, function(err, stage){
     var updateStage   = req.body;
 
-    Q.nfcall(stageFieldsValidate, updateStage)
+    Q.nfcall(validation.fields, updateStage, Stage.schema, validation.dateRange)
      .then(function(){
       stage.start       = new Date(updateStage.start);
       stage.end         = new Date(updateStage.end);
@@ -71,20 +71,6 @@ function deleteStage(req, res){
       res.status(200).json({ success: true })
     })
   })
-}
-
-function stageFieldsValidate(newBody, callback){
-  if (Object.keys(newBody).length !== Object.keys(Stage.schema).length) throw 'fields unmatch';
-
-  for (prop in newBody){
-    if (Object.keys(Stage.schema).indexOf(prop) == -1) throw 'fields unmatch';
-  }
-  return startEndValidation(newBody, callback)
-}
-
-function startEndValidation(stage, callback){
-  if (new Date(stage.start) > new Date(stage.end)) throw 'start date cannot be later than the end date'
-  callback(null, true)
 }
 
 module.exports = {
