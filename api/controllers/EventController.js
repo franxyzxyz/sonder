@@ -87,6 +87,8 @@ function deleteEvent(req, res){
 }
 
 function fieldsValidate(newBody, stage, callback){
+  if (Object.keys(newBody).length !== Object.keys(Event.schema).length) throw 'fields unmatch';
+
   for (prop in newBody){
     if (Object.keys(Event.schema).indexOf(prop) == -1) throw 'fields unmatch';
   }

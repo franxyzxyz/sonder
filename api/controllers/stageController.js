@@ -1,4 +1,5 @@
 var Stage       = require('../models/Stage')
+var Q           = require("q");
 
 function getAllStages(req, res){
   var cypher = "START x = node({id})"
@@ -19,36 +20,47 @@ function getOneStage(req, res){
 
 function addStage(req, res){
   var newStage = req.body
-  newStage.start = new Date(newStage.start);
-  newStage.end = new Date(newStage.end);
 
-  Stage.save(newStage, function(err, stage){
-    if (err) return res.status(401).json({ success: false, error: err.message});
-    db.relate(req.params.user_id, 'has_stage', stage.id, function(err, rel){
-      if (err) {
-        db.delete(stage.id, true, function(error){
-          res.status(401).json({ success: false, error: error})
-        })
-      }
-      res.status(200).json({ success: true, relationship: rel, stage: stage})
+  Q.nfcall(stageFieldsValidate, newStage)
+   .then(function(){
+    newStage.start = new Date(newStage.start);
+    newStage.end = new Date(newStage.end);
+    Stage.save(newStage, function(err, stage){
+      if (err) return res.status(401).json({ success: false, error: err.message});
+      db.relate(req.params.user_id, 'has_stage', stage.id, function(err, rel){
+        if (err) {
+          db.delete(stage.id, true, function(error){
+            res.status(401).json({ success: false, error: error})
+          })
+        }
+        res.status(200).json({ success: true, relationship: rel, stage: stage})
+      })
     })
-  })
+   })
+   .catch(function(error){
+     res.status(401).json({success: false, message: error});
+   })
 }
 
 function updateStage(req, res){
   Stage.read(req.params.stage_id, function(err, stage){
     var updateStage   = req.body;
-    stage.start       = new Date(updateStage.start);
-    stage.end         = new Date(updateStage.end);
-    stage.description = updateStage.description;
-    stage.title       = updateStage.title;
-    if (!validateDate(stage)){
-      return res.status(401).json({success: false, message: 'End date cannot be earlier than the start date'})
-    }
-    Stage.save(stage, function(err, stage){
-      if(err) return res.status(401).json({success: false, error: err.message});
-      res.status(200).json({ success: true, stage: stage})
-    })
+
+    Q.nfcall(stageFieldsValidate, updateStage)
+     .then(function(){
+      stage.start       = new Date(updateStage.start);
+      stage.end         = new Date(updateStage.end);
+      stage.description = updateStage.description;
+      stage.title       = updateStage.title;
+
+      Stage.save(stage, function(err, stage){
+        if(err) return res.status(401).json({success: false, error: err.message});
+        res.status(200).json({ success: true, stage: stage})
+      })
+     })
+     .catch(function(error){
+       res.status(401).json({success: false, message: error});
+     })
   })
 }
 
@@ -61,11 +73,18 @@ function deleteStage(req, res){
   })
 }
 
-function validateDate(stage){
-  if (stage.start > stage.end) {
-    return false
+function stageFieldsValidate(newBody, callback){
+  if (Object.keys(newBody).length !== Object.keys(Stage.schema).length) throw 'fields unmatch';
+
+  for (prop in newBody){
+    if (Object.keys(Stage.schema).indexOf(prop) == -1) throw 'fields unmatch';
   }
-  return true
+  return startEndValidation(newBody, callback)
+}
+
+function startEndValidation(stage, callback){
+  if (new Date(stage.start) > new Date(stage.end)) throw 'start date cannot be later than the end date'
+  callback(null, true)
 }
 
 module.exports = {

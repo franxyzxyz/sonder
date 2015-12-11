@@ -27,6 +27,8 @@ function getOne(req, res){
 
 function updateUser(req, res){
   User.read(req.params.user_id, function(err, user){
+    if(err) return res.status(401).json({success: false, error: err});
+
     user.name      = req.body.name;
     user.category  = req.body.category;
     user.location  = req.body.location;
@@ -40,9 +42,13 @@ function updateUser(req, res){
 }
 
 function deleteUser(req, res){
-  db.delete(req.params.user_id,function(err, nodes){
+  User.read(req.params.user_id, function(err, user){
     if(err) return res.status(401).json({success: false, error: err});
-    res.status(200).json({ success: true })
+
+    db.delete(req.params.user_id, true, function(err, nodes){
+      if(err) return res.status(401).json({success: false, error: err});
+      res.status(200).json({ success: true })
+    })
   })
 }
 
