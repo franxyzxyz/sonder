@@ -37,6 +37,7 @@
     "passport-facebook": "^2.0.0",
     "passport-facebook-token": "^3.0.6",
     "passport-local": "^1.0.0",
+    "q": "^1.4.1",
     "seraph": "^0.14.0",
     "seraph-model": "^0.7.5",
     "url": "^0.11.0"
