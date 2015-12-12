@@ -18,11 +18,7 @@ url = require('url').parse(process.env.GRAPHSTORY_URL)
 console.log(url)
 console.log(url.auth)
 
-db = require("seraph")({
-  server: url.protocol + '//' + url.host,
-  user: url.auth.split(':')[0],
-  pass: url.auth.split(':')[1]
-});
+db = require("seraph")(process.env.GRAPHSTORY_URL);
 
 
 app.use(bodyParser.json());
