@@ -11,7 +11,18 @@ var Q              = require("q");
 // var emailRegex = require('email-regex');
 require('dotenv').load();
 
-db = require("seraph")("http://localhost:7474");
+// db = require("seraph")("http://localhost:7474");
+
+
+url = require('url').parse(process.env.GRAPHSTORY_URL)
+
+db = require("seraph")({
+  server: url.protocol + '//' + url.host,
+  user: url.auth.split(':')[0],
+  pass: url.auth.split(':')[1]
+});
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));

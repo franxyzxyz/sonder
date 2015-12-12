@@ -3,7 +3,7 @@ var seraphModel     = require('seraph-model');
 var User            = seraphModel(db, 'user');
 var UserSchema      = require('../models/User').schema;
 var bcrypt          = require('bcrypt-nodejs');
-var validation  = require('../helpers/validation')
+var validation      = require('../helpers/validation')
 var Q               = require("q");
 
 module.exports = function(passport){

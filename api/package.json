@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" "node app.js"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,13 @@
     "dotenv": "^1.2.0",
     "email-regex": "^1.0.0",
     "express": "^4.13.3",
+    "fb": "^0.7.3",
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
+    "node-linkedin": "^0.5.3",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.0.0",
+    "passport-facebook-token": "^3.0.6",
     "passport-local": "^1.0.0",
     "seraph": "^0.14.0",
     "seraph-model": "^0.7.5"
