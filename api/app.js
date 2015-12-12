@@ -14,8 +14,6 @@ require('dotenv').load();
 // db = require("seraph")("http://localhost:7474");
 
 url = require('url').parse("http://app44801919:VRPxRxHJBAyBC7AAln7u@app44801919.sb02.stations.graphenedb.com:24789")
-// console.log(url.protocol + '//' + url.host)
-// console.log(url.auth)
 
 db = require("seraph")({
   server: url.protocol + '//' + url.host,
