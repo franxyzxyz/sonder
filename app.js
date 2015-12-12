@@ -11,15 +11,15 @@ var Q              = require("q");
 // var emailRegex = require('email-regex');
 require('dotenv').load();
 
-// db = require("seraph")("http://localhost:7474");
+db = require("seraph")("http://localhost:7474");
 
-url = require('url').parse(process.env.GRAPHENEDB_URL)
+// url = require('url').parse(process.env.GRAPHENEDB_URL)
 
-db = require("seraph")({
-  server: url.protocol + '//' + url.host,
-  user: url.auth.split(':')[0],
-  pass: url.auth.split(':')[1]
-});
+// db = require("seraph")({
+//   server: url.protocol + '//' + url.host,
+//   user: url.auth.split(':')[0],
+//   pass: url.auth.split(':')[1]
+// });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +35,9 @@ var userRoutes = require('./api/config/userRoutes')
 var sessionRoutes = require('./api/config/sessionRoutes')
 app.use('/api', sessionRoutes)
 app.use('/api', expressJWT({secret: process.env.JWT_SECRET}),userRoutes);
+
+var metooRoutes = require('./api/config/metooRoutes')
+app.use('/api/', expressJWT({secret: process.env.JWT_SECRET}), metooRoutes)
 
 var likeRoutes = require('./api/config/likeRoutes')
 app.use('/api/', expressJWT({secret: process.env.JWT_SECRET}), likeRoutes)

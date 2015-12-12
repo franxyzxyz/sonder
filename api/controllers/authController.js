@@ -64,6 +64,13 @@ function checkLikeRel(req, res, next){
   })
 }
 
+function checkMetooRel(req, res, next){
+  db.rel.read(req.params.like_id, function(err, rel){
+    if (!rel || rel.type !== 'metoo') return res.status(401).json({success: false, error: 'Invalid me-too id'});
+    return userRelAuth(rel.start, req, res, next)
+  })
+}
+
 function userRelAuth(id, req, res, next){
   var cypher = "START x = node({id})"
              + "RETURN x";
@@ -78,5 +85,6 @@ module.exports = {
   checkStageNode    : checkStageNode,
   checkEventNode    : checkEventNode,
   checkFavRel       : checkFavRel,
-  checkLikeRel      : checkLikeRel
+  checkLikeRel      : checkLikeRel,
+  checkMetooRel     : checkMetooRel
 }

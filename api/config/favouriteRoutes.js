@@ -13,7 +13,8 @@ router.route('/timeline/favourite/:favourite_id')
           favouriteController.deleteFavourite)
 
 router.route('/user/:user_id/favourites')
-  .get(authController.checkUserNode, favouriteController.getUserFavourites)
+  .get(authController.checkUserNode,
+       favouriteController.getUserFavourites)
 
 
 module.exports = router
