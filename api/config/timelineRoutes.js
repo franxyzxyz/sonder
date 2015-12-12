@@ -2,7 +2,7 @@ var express        = require('express');
 var router         = express.Router();
 
 var timelineController = require('../controllers/timelineController');
-var eventController = require('../controllers/EventController');
+var eventController = require('../controllers/eventController');
 
 router.route('/timelines')
   .get(timelineController.getTimelines)
