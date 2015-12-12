@@ -15,6 +15,8 @@ require('dotenv').load();
 
 
 url = require('url').parse(process.env.GRAPHSTORY_URL)
+console.log(url)
+console.log(url.auth)
 
 db = require("seraph")({
   server: url.protocol + '//' + url.host,
