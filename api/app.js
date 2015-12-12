@@ -13,20 +13,15 @@ require('dotenv').load();
 
 // db = require("seraph")("http://localhost:7474");
 
-url = require('url').parse(process.env.GRAPHENEDB_URL)
+url = require('url').parse("http://app44801919:VRPxRxHJBAyBC7AAln7u@app44801919.sb02.stations.graphenedb.com:24789")
+// console.log(url.protocol + '//' + url.host)
+// console.log(url.auth)
 
-db = require("seraph")(url.protocol + '//' + url.host);
-
-db.save({ name: "Test-Man", age: 40 }, function(err, node) {
-  if (err) throw err;
-  console.log("Test-Man inserted.");
-
-  db.delete(node, function(err) {
-    if (err) throw err;
-    console.log("Test-Man away!");
-  });
+db = require("seraph")({
+  server: url.protocol + '//' + url.host,
+  user: url.auth.split(':')[0],
+  pass: url.auth.split(':')[1]
 });
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
