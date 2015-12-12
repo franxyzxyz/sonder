@@ -53,12 +53,9 @@ app.use('/api/timeline/', expressJWT({secret: process.env.JWT_SECRET}), stageRou
 var eventRoutes = require('./config/eventRoutes')
 app.use('/api/timeline/', expressJWT({secret: process.env.JWT_SECRET}), eventRoutes)
 
-
-
-
 app.use(function(err, req, res, next){
   if (err) return res.status(401).json({error: err.message})
 });
 
-app.listen(3000);
+app.listen(process.env.PORT);
 console.log("Connected to server")
