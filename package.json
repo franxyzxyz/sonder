@@ -22,6 +22,7 @@
   "homepage": "https://github.com/franxyzxyz/sonder#readme",
   "dependencies": {
     "bcrypt": "^0.8.5",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "connect": "^3.4.0",
     "debug": "^2.2.0",
@@ -30,6 +31,7 @@
     "express": "^4.13.3",
     "express-jwt": "^3.3.0",
     "fb": "^0.7.3",
+    "jsonwebtoken": "^5.4.1",
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
     "node-linkedin": "^0.5.3",
