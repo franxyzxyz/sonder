@@ -7,6 +7,7 @@ var app            = express();
 var expressJWT     = require('express-jwt');
 var passport       = require("passport");
 var Q              = require("q");
+var cors           = require("cors");
 
 // var emailRegex = require('email-regex');
 require('dotenv').load();
@@ -20,7 +21,7 @@ db = require("seraph")("http://localhost:7474");
 //   user: url.auth.split(':')[0],
 //   pass: url.auth.split(':')[1]
 // });
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));

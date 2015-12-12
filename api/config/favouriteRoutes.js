@@ -10,6 +10,7 @@ router.route('/timeline/:user_id/favourites')
 
 router.route('/timeline/favourite/:favourite_id')
   .delete(authController.checkFavRel,
+          authController.isRelOwner,
           favouriteController.deleteFavourite)
 
 router.route('/user/:user_id/favourites')

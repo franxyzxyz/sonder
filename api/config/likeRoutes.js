@@ -8,12 +8,14 @@ router.route('/timeline/:user_id/likes')
   .get(authController.checkUserNode, likeController.getLikedEvents)
 
 router.route('/event/:event_id/likes')
-  .get(authController.checkEventNode, likeController.getEventLikes)
+  .get(authController.checkEventNode,
+       likeController.getEventLikes)
   .post(authController.checkEventNode,
         likeController.addLike)
 
 router.route('/timeline/like/:like_id')
   .delete(authController.checkLikeRel,
+          // authController.isSessionUser,
           likeController.deleteLike)
 
 

@@ -8,10 +8,12 @@ router.route('/timeline/:user_id/metoo')
   .get(authController.checkUserNode, metooController.getMetooUsers)
 
 router.route('/event/:event_id/metoo')
-  .post(authController.checkEventNode, metooController.addMetoo_event)
+  .post(authController.checkEventNode,
+        metooController.addMetoo_event)
 
 router.route('/timeline/metoo/:metoo_id')
   .delete(authController.checkMetooRel,
+          authController.isRelOwner,
           metooController.deleteMetoo)
 
 module.exports = router

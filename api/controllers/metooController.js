@@ -16,38 +16,28 @@ function getMetooUsers(req, res){
 }
 
 function addMetoo_event(req, res){
-  // db.relationships(req.params.event_id, 'all', 'has_event', function(err, rel){
-  //   db.relationships(rel[0].start, 'all', 'has_stage', function(err, result){
-  //     // console.log(result[0].start)
-  //     // console.log(req.user.id)
-  //     if(result[0].start == req.user.id){
-  //       console.log('same user')
-  //     }
-  //   })
-  // })
-  var cypher = "START event = node({event_id}) "
-             + "MATCH user -[r:has_stage]-> stage -[:has_event]-> event <-[:metoo]- me "
-             + "WHERE id(me) = {id}"
-             + "RETURN r, user"
-  db.query(cypher, {id: parseInt(req.user.id), event_id: parseInt(req.params.event_id)}, function(err, result){
-    console.log(result)
+  var cypher = "START event = node({event_id})"
+             + "MATCH user -[:has_stage]-> stage -[:has_event]-> event "
+             + "OPTIONAL MATCH (event)-[r:metoo]->(x:user)"
+             + "RETURN user, r";
+  db.query(cypher, {event_id: parseInt(req.params.event_id)}, function(err, result){
+    if (err) return res.status(401).json({ success: false, error: err });
+    if (result[0].user.id == req.user.id) return res.status(401).json({success: false, error: 'cannot me-too own event'});
+    if (result[0].r) return res.status(401).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});
 
-    /// user cannot me-too their own events
+    db.relate(req.user.id, 'me_too', req.params.event_id, function(err, rel){
+      if (err) return res.status(401).json({ success: false, error: err });
 
-    // if (result.length !== 0) return res.status(401).json({success: false, error: 'already me-too-ed', relationship: result[0]});
-
-    // db.relate(req.user.id, 'me_too', req.params.event_id, function(err, rel){
-    //   res.status(200).json({ success: true, relationship: rel})
-    // })
+      res.status(200).json({ success: true, relationship: rel});
+    })
   })
 }
 
 function deleteMetoo(req, res){
-  console.log(req.params.metoo_id)
-  // db.rel.delete(req.params.metoo_id, function(err){
-  //   if (err) return res.status(401).json({success: false, error: err});
-  //   return res.status(200).json({ success: true })
-  // })
+  db.rel.delete(req.params.metoo_id, function(err){
+    if (err) return res.status(401).json({success: false, error: err});
+    return res.status(200).json({ success: true })
+  })
 }
 
 function getMetooRel(start, direction, req, res){
