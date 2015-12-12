@@ -13,7 +13,6 @@ require('dotenv').load();
 
 // db = require("seraph")("http://localhost:7474");
 
-
 url = require('url').parse(process.env.GRAPHENEDB_URL)
 
 db = require("seraph")({
@@ -21,6 +20,17 @@ db = require("seraph")({
   user: url.auth.split(':')[0],
   pass: url.auth.split(':')[1]
 });
+
+db.save({ name: "Test-Man", age: 40 }, function(err, node) {
+  if (err) throw err;
+  console.log("Test-Man inserted.");
+
+  db.delete(node, function(err) {
+    if (err) throw err;
+    console.log("Test-Man away!");
+  });
+});
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
