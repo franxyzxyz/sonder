@@ -32,6 +32,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport')(passport);
 
+app.use('/test/route', function(req, res){
+  res.status(200).json({success: "hello"})
+})
+
 // var helper_method = require('./helpers/helper_function');
 var userRoutes = require('./config/userRoutes')
 var sessionRoutes = require('./config/sessionRoutes')
