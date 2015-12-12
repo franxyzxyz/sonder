@@ -13,7 +13,7 @@ require('dotenv').load();
 
 // db = require("seraph")("http://localhost:7474");
 
-url = require('url').parse("http://app44801919:VRPxRxHJBAyBC7AAln7u@app44801919.sb02.stations.graphenedb.com:24789")
+url = require('url').parse(process.env.GRAPHENEDB_URL)
 
 db = require("seraph")({
   server: url.protocol + '//' + url.host,
@@ -56,4 +56,4 @@ app.use(function(err, req, res, next){
 });
 
 app.listen(process.env.PORT);
-console.log("Connected to server")
+console.log("Connected to server PORT=", process.env.PORT)
