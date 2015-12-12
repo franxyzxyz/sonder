@@ -15,7 +15,7 @@ require('dotenv').load();
 
 url = require('url').parse(process.env.GRAPHENEDB_URL)
 
-db = require("seraph")(process.env.GRAPHENEDB_URL);
+db = require("seraph")(url.protocol + '//' + url.host);
 
 db.save({ name: "Test-Man", age: 40 }, function(err, node) {
   if (err) throw err;
