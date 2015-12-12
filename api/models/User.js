@@ -6,7 +6,7 @@ User.schema = {
   password   : { type: String, required: true },
   email      : { type: String, required: true },
   name       : { type: String, required: true },
-  category   : { type: String, enum:['Tech','Design','Engineering','Finance'], required: true },
+  category   : { type: String, enum:['Tech','Design','Engineering','Finance', 'Education'], required: true },
   location   : { type: String, required: true },
   anonymous  : { type: Boolean, required: true }
 };

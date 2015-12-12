@@ -10,7 +10,6 @@ router.route('/timeline/:user_id/likes')
 router.route('/event/:event_id/likes')
   .get(authController.checkEventNode, likeController.getEventLikes)
   .post(authController.checkEventNode,
-        authController.isEventAuthorized,
         likeController.addLike)
 
 router.route('/timeline/like/:like_id')
