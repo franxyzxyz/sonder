@@ -12,15 +12,15 @@ var cors           = require("cors");
 // var emailRegex = require('email-regex');
 require('dotenv').load();
 
-db = require("seraph")("http://localhost:7474");
+// db = require("seraph")("http://localhost:7474");
 
-// url = require('url').parse(process.env.GRAPHENEDB_URL)
+url = require('url').parse(process.env.GRAPHENEDB_URL)
 
-// db = require("seraph")({
-//   server: url.protocol + '//' + url.host,
-//   user: url.auth.split(':')[0],
-//   pass: url.auth.split(':')[1]
-// });
+db = require("seraph")({
+  server: url.protocol + '//' + url.host,
+  user: url.auth.split(':')[0],
+  pass: url.auth.split(':')[1]
+});
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,6 +30,9 @@ app.use(methodOverride('_method'));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./api/config/passport')(passport);
+
+var helperRoutes = require('./api/config/helperRoutes')
+app.use('/api', helperRoutes)
 
 // var helper_method = require('./helpers/helper_function');
 var userRoutes = require('./api/config/userRoutes')
