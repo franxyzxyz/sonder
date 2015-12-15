@@ -1,6 +1,6 @@
 <div class="col-sm-offset-3 col-md-offset-4 col-lg-offset-4 col-sm-6 col-md-4 col-lg-4">
   <h2 class="text-center">Sign Up</h2>
-  <div class="error" ng-if="error">{{error}}</div>
+  <uib-alert type="danger" close="clearError()" dismiss-on-timeout="1000" ng-if="error">{{error}}</uib-alert>
   <form ng-submit="postSignup()">
     <div class="form-group">
       <input ng-model="newUser.username" type="text" name="user" placeholder="Username" class="form-control"/>

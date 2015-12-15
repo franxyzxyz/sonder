@@ -13,7 +13,9 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
     $scope.message  = null;
   }
   getSignup();
-
+  $scope.clearError = function(){
+    $scope.error = null;
+  }
   function getSignup(){
     $http
       .get("http://" + location.host + "/api/helper/location")

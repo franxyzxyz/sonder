@@ -2,6 +2,7 @@ app.controller('ShowController', ['$scope','$http', '$window', '$state','$stateP
 
 function ShowController($scope, $http, $window, $state, $stateParams, $rootScope, $q, timelineHelper){
   $scope.fav = {};
+  $scope.error = null;
   fetchUser($stateParams.timeline_id);
   fetchFavourite($stateParams.timeline_id);
   init();
@@ -94,7 +95,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   $scope.postLike = function(event_id){
-    $http.post("http://" + location.host + 'api/event/' + event_id + "/likes")
+    $http.post("http://" + location.host + '/api/event/' + event_id + "/likes")
          .then(function(res){
           $scope.timelines.forEach(function(timeline, idx){
             var event_idx = _.findIndex(timeline.events, function(event){

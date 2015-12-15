@@ -63,6 +63,7 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
         .success(function(data, status, headers, config){
           $scope.reset();
           $state.go('editTimeline');
+          $scope.message = "YEAH!";
         })
         .error(function(data, status, headers, config){
           $scope.stageMessage = data.message.toUpperCase();
@@ -73,11 +74,6 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
   $scope.clearMessage = function (){
     $scope.message = null;
   }
-
-  $rootScope.$on('add_to_stage', function(e, stage_id){
-    console.log(stage_id)
-    $scope.specific_stage = stage_id;
-  })
 
   $rootScope.$on('deleted_stage', function(event, stage_id){
     $scope.message = "Successfully deleted the stage!";
