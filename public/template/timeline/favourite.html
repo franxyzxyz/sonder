@@ -2,7 +2,19 @@
   <h3 class="text-center">List of favourite</h3>
   <div class="fav-wrapper">
     <div ng-repeat="fav in favourite.users" class="col-sm-4 fav-list">
-    <favlist fav="fav"></favlist>
+      <div  class="fav-box">
+        <a ui-sref="showOne({timeline_id:fav.id})" class="name">
+          <span ng-if="!fav.anonymous">{{fav.name}}</span>
+          <span ng-if="fav.anonymous">Anonymous</span>
+        </a>
+        <div class="message">{{fav.location}}</div>
+        <div class="message">{{fav.industry}}</div>
+        <p ng-if="fav.anonymous">{{fav.email}}</p>
+        <p ng-if="fav.role">{{fav.role}}</p>
+        <p>
+          <img ng-if="!fav.anonymous" gravatar-src="fav.email" gravatar-size="70" class="gravatar"><img ng-if="fav.anonymous" gravatar-src="" gravatar-size="70" class="gravatar">
+        </p>
+      </div>
     </div>
   </div>
 </section>

@@ -260,6 +260,7 @@ img.gravatar{
   border-right:10px solid #DD524A;
 }
 span.message{
+  margin-top:10px;
   background:#DD524A;
   line-height:200%;
   padding:5px 20px;
@@ -299,9 +300,11 @@ span.message{
   vertical-align: middle;
   display:inline-block;
 }
+.basic-info{
+  text-align:left !important;
+}
 .basic-info .mock-up{
   display:block;
-  margin-left:10px;
 }
 .arrow-basic{
   border-right:10px solid #ccc;

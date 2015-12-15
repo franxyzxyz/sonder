@@ -1,4 +1,5 @@
-<div ng-if="!fav.anonymous" class="fav-box">
+<div ng-if="!(fav.anonymous)" class="fav-box">
+{{fav.anonymous}}
   <a ui-sref="showOne({timeline_id:fav.id})" class="name">{{fav.name}}</a>
   <div class="message">{{fav.location}}</div>
   <div class="message">{{fav.industry}}</div>
