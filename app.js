@@ -8,6 +8,7 @@ var expressJWT     = require('express-jwt');
 var passport       = require("passport");
 var Q              = require("q");
 var cors           = require("cors");
+var path           = require("path");
 
 // var emailRegex = require('email-regex');
 require('dotenv').load();
@@ -30,6 +31,17 @@ app.use(methodOverride('_method'));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./api/config/passport')(passport);
+
+app.set('views', __dirname + '/public');
+app.engine('.html', require('ejs').renderFile);
+app.set('view engine', 'html');
+app.set('view options', {
+    layout: false
+});
+app.use(express.static(__dirname + '/public'));
+app.get('/', function(req, res){
+  res.render('index')
+})
 
 var helperRoutes = require('./api/config/helperRoutes')
 app.use('/api', helperRoutes)
