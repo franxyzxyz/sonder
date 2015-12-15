@@ -20,28 +20,28 @@ app.factory('authInterceptor', function($rootScope, $q, $window){
 app.factory('timelineHelper', function($http, $q){
   return {
     getLike: function(event_id){
-      return $http.get('http://localhost:3000/api/event/' + event_id + "/likes")
+      return $http.get("http://" + location.host + '/api/event/' + event_id + "/likes")
     },
     deleteFav: function(fav_id){
-      return $http.delete('http://localhost:3000/api/timeline/favourite/' + fav_id)
+      return $http.delete("http://" + location.host + '/api/timeline/favourite/' + fav_id)
     },
     deleteLike: function(like_id){
-      return $http.delete('http://localhost:3000/api/timeline/like/' + like_id)
+      return $http.delete("http://" + location.host + '/api/timeline/like/' + like_id)
     },
     getUser: function(user_id){
-      return $http.get('http://localhost:3000/api/user/' + user_id)
+      return $http.get("http://" + location.host + '/api/user/' + user_id)
     },
     getMetoo: function(event_id){
-      return $http.get('http://localhost:3000/api/event/' + event_id + "/metoo")
+      return $http.get("http://" + location.host + '/api/event/' + event_id + "/metoo")
     },
     postMetoo: function(event_id){
-      return $http.post('http://localhost:3000/api/event/' + event_id + "/metoo")
+      return $http.post("http://" + location.host + '/api/event/' + event_id + "/metoo")
     },
     deleteMetoo: function(metoo_id){
-      return $http.delete('http://localhost:3000/api/timeline/metoo/' + metoo_id)
+      return $http.delete("http://" + location.host + '/api/timeline/metoo/' + metoo_id)
     },
     updateUser: function(user_id, newBody){
-      return $http.put('http://localhost:3000/api/user/' + user_id, newBody)
+      return $http.put("http://" + location.host + '/api/user/' + user_id, newBody)
     }
   }
 });

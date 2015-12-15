@@ -1,7 +1,6 @@
 app.controller('UserController', ['$scope', '$http','$window', '$state','timelineHelper','$location', UserController]);
 
 function UserController($scope, $http, $window, $state, timelineHelper, $location){
-  console.log(location.host)
   $scope.currentUser = {};
   $scope.user = {username: null, password: null};
   $scope.newUser = {anonymous: false};
@@ -17,12 +16,12 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
 
   function getSignup(){
     $http
-      .get("http://localhost:3000/api/helper/location")
+      .get("http://" + location.host + "/api/helper/location")
       .success(function(data, status, headers, config){
         $scope.locationsList = data.location;
       })
     $http
-      .get("http://localhost:3000/api/helper/industry")
+      .get("http://" + location.host + "/api/helper/industry")
       .success(function(data, status, headers, config){
         $scope.industryList = data.industry;
       });
@@ -34,7 +33,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
 
   function getUser(user_id){
     $http
-      .get('http://localhost:3000/api/user/' + user_id)
+      .get("http://" + location.host + '/api/user/' + user_id)
       .then(function(res){
         $scope.currentUser = res.data.user;
       })
@@ -42,7 +41,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
 
   $scope.postLogin = function(){
     $http
-      .post('http://localhost:3000/api/login', $scope.user)
+      .post("http://" + location.host + '/api/login', $scope.user)
       .success(function(data, status, headers, config){
         $scope.user.username = null;
         $scope.user.password = null;
@@ -59,7 +58,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
   };
   $scope.postSignup = function(){
     $http
-      .post('http://localhost:3000/api/signup', $scope.newUser)
+      .post("http://" + location.host + '/api/signup', $scope.newUser)
       .success(function(data, status, headers, config){
         $scope.message = 'User ' + data.user.name + ' has been created!';
         $state.go('login');

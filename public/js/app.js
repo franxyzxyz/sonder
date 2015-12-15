@@ -30,12 +30,12 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
         $scope.reset = function(){
           if ($window.sessionStorage.sid){
             $http
-              .get('http://localhost:3000/api/timeline/' + $window.sessionStorage.sid + "/stages")
+              .get("http://" + location.host + '/api/timeline/' + $window.sessionStorage.sid + "/stages")
               .success(function(data, status, headers, config){
                 $scope.timelines = [];
                 return data.stages.forEach(function(stage){
                   var input = {stage: stage, event: []};
-                  $http.get('http://localhost:3000/api/timeline/' + $window.sessionStorage.sid + "/stage/" + stage.id + "/events")
+                  $http.get("http://" + location.host + '/api/timeline/' + $window.sessionStorage.sid + "/stage/" + stage.id + "/events")
                        .success(function(data, status, headers, config){
                         data.events.forEach(function(event){
                           input.event.push(event)

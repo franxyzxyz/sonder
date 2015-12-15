@@ -94,7 +94,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   $scope.postLike = function(event_id){
-    $http.post('http://localhost:3000/api/event/' + event_id + "/likes")
+    $http.post("http://" + location.host + 'api/event/' + event_id + "/likes")
          .then(function(res){
           $scope.timelines.forEach(function(timeline, idx){
             var event_idx = _.findIndex(timeline.events, function(event){
@@ -129,7 +129,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   };
 
   $scope.favUser = function(){
-    $http.post('http://localhost:3000/api/timeline/' + $stateParams.timeline_id + "/favourites")
+    $http.post("http://" + location.host + '/api/timeline/' + $stateParams.timeline_id + "/favourites")
          .then(function(res){
           $scope.fav.users.push(res.data.relationship)
           $scope.fav.count += 1;
@@ -149,7 +149,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   function init(){
-    $http.get('http://localhost:3000/api/timeline/' + $stateParams.timeline_id + "/stages")
+    $http.get("http://" + location.host + '/api/timeline/' + $stateParams.timeline_id + "/stages")
          .then(function(res){
           res.data.stages.forEach(function(stage){
             $scope.timelines.push({stage: stage, events: []})
@@ -165,7 +165,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   function fetchEvents(stage_id){
-    $http.get('http://localhost:3000/api/timeline/' + $stateParams.timeline_id + "/stage/" + stage_id + "/events")
+    $http.get("http://" + location.host + '/api/timeline/' + $stateParams.timeline_id + "/stage/" + stage_id + "/events")
          .then(function(res){
           _.each($scope.timelines, function(item, id){
             if (_.isEqual(item.stage.id, stage_id)){
@@ -201,7 +201,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   function fetchFavourite(user_id){
-    $http.get('http://localhost:3000/api/timeline/' + user_id + "/favourites")
+    $http.get("http://" + location.host + '/api/timeline/' + user_id + "/favourites")
          .then(function(res){
           $scope.fav.users = res.data.fav_user;
           $scope.fav.count = res.data.fav_count;
@@ -211,7 +211,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   function fetchUser(user_id){
-    $http.get('http://localhost:3000/api/user/' + user_id)
+    $http.get("http://" + location.host + '/api/user/' + user_id)
          .then(function(res){
           $scope.user = res.data.user
          }, function(error){
@@ -221,7 +221,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
 
   function fetchLike(event_id){
     var defer = $q.defer();
-    $http.get('http://localhost:3000/api/event/' + event_id + "/likes")
+    $http.get("http://" + location.host + '/api/event/' + event_id + "/likes")
          .then(function(res){
           console.log(res.data)
           defer.resolve(res.data)

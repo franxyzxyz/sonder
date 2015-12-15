@@ -30,7 +30,7 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
       var stage_id = $scope.newEvent.to_stage.id;
       delete $scope.newEvent.to_stage
       $http
-        .post("http://localhost:3000/api/timeline/" + $window.sessionStorage.sid + "/stage/" + stage_id + "/events", $scope.newEvent)
+        .post("http://" + location.host + "/api/timeline/" + $window.sessionStorage.sid + "/stage/" + stage_id + "/events", $scope.newEvent)
         .success(function(data, status, headers, config){
           $state.go('editTimeline');
           if ($scope.reset){
@@ -46,7 +46,7 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
 
   $scope.deleteEvent = function(event_id){
     $http
-      .delete("http://localhost:3000/api/timeline/event/" + event_id)
+      .delete("http://" + location.host + "/api/timeline/event/" + event_id)
       .then(function(res){
         $scope.reset();
       }, function(error){
@@ -59,7 +59,7 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
     if ($window.sessionStorage.sid){
       $scope.stageMessage = null;
       $http
-        .post("http://localhost:3000/api/timeline/" + $window.sessionStorage.sid + "/stages", $scope.newStage)
+        .post("http://" + location.host + "/api/timeline/" + $window.sessionStorage.sid + "/stages", $scope.newStage)
         .success(function(data, status, headers, config){
           $scope.reset();
           $state.go('editTimeline');
@@ -97,12 +97,12 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
   function init_form(){
     if ($window.sessionStorage.sid){
       $http
-        .get("http://localhost:3000/api/helper/category")
+        .get("http://" + location.host + "/api/helper/category")
         .success(function(data, status, headers, config){
           $scope.categoryList = data.category;
         });
       $http
-        .get("http://localhost:3000/api/timeline/" + $window.sessionStorage.sid + "/stages")
+        .get("http://" + location.host + "/api/timeline/" + $window.sessionStorage.sid + "/stages")
         .success(function(data, status, headers, config){
           if (data.no_of_stages == 0) {$scope.eventMessage = 'It seems like you haven\'t add any stage yet'}
           $scope.stages = data.stages;

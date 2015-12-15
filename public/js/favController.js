@@ -6,7 +6,7 @@ function FavController($scope, $http, $window, $state, $stateParams){
 
   function fetchMyFavourite(user_id){
     $scope.favourite = {users: []};
-    $http.get('http://localhost:3000/api/user/' + user_id + "/favourites")
+    $http.get("http://" + location.host + '/api/user/' + user_id + "/favourites")
          .then(function(res){
           $scope.favourite.count = res.data.fav_count;
           res.data.fav_user.forEach(function(user){
@@ -18,7 +18,7 @@ function FavController($scope, $http, $window, $state, $stateParams){
   }
 
   function fetchUser(user_id){
-    $http.get('http://localhost:3000/api/user/' + user_id)
+    $http.get("http://" + location.host + '/api/user/' + user_id)
          .then(function(res){
           $scope.favourite.users.push(res.data.user)
          }, function(error){

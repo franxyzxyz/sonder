@@ -43,7 +43,7 @@ function DeleteModal($scope, $uibModalInstance, $http, $rootScope, stage_id){
 
   $scope.deleteStage = function(stage_id){
     $http
-      .delete("http://localhost:3000/api/timeline/stage/" + stage_id)
+      .delete("http://" + location.host + "/api/timeline/stage/" + stage_id)
       .then(function(res){
         $scope.$emit('deleted_stage', stage_id)
         $uibModalInstance.close();
