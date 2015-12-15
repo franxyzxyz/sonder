@@ -1,6 +1,7 @@
-app.controller('UserController', ['$scope', '$http','$window', '$state','timelineHelper', UserController]);
+app.controller('UserController', ['$scope', '$http','$window', '$state','timelineHelper','$location', UserController]);
 
-function UserController($scope, $http, $window, $state, timelineHelper){
+function UserController($scope, $http, $window, $state, timelineHelper, $location){
+  console.log(location.host)
   $scope.currentUser = {};
   $scope.user = {username: null, password: null};
   $scope.newUser = {anonymous: false};
