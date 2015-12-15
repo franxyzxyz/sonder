@@ -93,7 +93,6 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
   }
   $scope.saveSetting = function(field){
     timelineHelper.updateUser($scope.editUser.id, $scope.editUser).then(function(res){
-      console.log(res.data)
       $scope.currentUser = res.data.user;
       $scope.cancel(field)
     }, function(error){

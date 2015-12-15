@@ -15,7 +15,7 @@
 
     <div class="info_wrapper">
       <div class="col-sm-12">
-        <div class="mock-up" ng-if="user.role"><div class="arrow-left"></div><span class="message">Currently {{user.role}} in {{user.industry}}</span></div>
+        <div class="mock-up" ng-if="user.role"><div class="arrow-left"></div><span class="message">{{user.role}}</span></div>
       </div>
       <div class="col-sm-12 inline-info">
         <div class="mock-up"><div class="arrow-left arrow-fav"></div><a ng-click="favUser()" class="btn-fav" ng-mouseenter="favhover = true" ng-mouseleave="favhover = false"><i class="fa fa-hand-spock-o"></i><!-- <i class="icon ion-android-bulb"></i> --> + <!-- <span ng-if="hover">{{fav.count +1 }}</span> --><span >{{fav.count}}</span></a></div>

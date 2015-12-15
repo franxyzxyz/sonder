@@ -47,12 +47,18 @@ function updatePassword(req, res){
 }
 
 function updateUser(req, res){
-  delete req.body.username
-  delete req.body.id
+  var updateBody = {};
+  updateBody.email = req.body.email;
+  updateBody.name = req.body.name;
+  updateBody.industry = req.body.industry;
+  updateBody.role = req.body.role;
+  updateBody.location = req.body.location;
+  updateBody.anonymous = req.body.anonymous;
+
   var userParams = User.schema
   delete userParams.username
   delete userParams.password;
-  Q.nfcall(validation.fields, req.body, userParams, null)
+  Q.nfcall(validation.fields, updateBody, userParams, null)
    .then(function(){
     User.read(req.params.user_id, function(err, user){
       if(err) return res.status(401).json({success: false, error: err});
