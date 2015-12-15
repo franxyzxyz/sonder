@@ -47,6 +47,8 @@ function updatePassword(req, res){
 }
 
 function updateUser(req, res){
+  delete req.body.username
+  delete req.body.id
   var userParams = User.schema
   delete userParams.username
   delete userParams.password;
@@ -57,12 +59,15 @@ function updateUser(req, res){
 
       user.email     = req.body.email;
       user.name      = req.body.name;
-      user.category  = req.body.category;
+      user.industry  = req.body.industry;
       user.location  = req.body.location;
+      user.role     = req.body.role;
       user.anonymous = req.body.anonymous;
 
       User.save(user, function(err, user){
         if(err) return res.status(401).json({success: false, error: err});
+        delete user.username
+        delete user.password
         res.status(200).json({ success: true, user: user})
       })
     })
@@ -89,10 +94,11 @@ function postLogin(req, res, next){
     if (!callback) return res.status(401).json({message: message.message})
 
     var user = callback;
+    delete user[0].password
 
     var myInfo = {username: user[0].username, id: user[0].id}
     var newToken = genToken(myInfo);
-    res.status(200).json({success: true, token: newToken})
+    res.status(200).json({success: true, token: newToken, user: user[0]})
   })(req, res, next)
 }
 

@@ -12,7 +12,10 @@ function isRelOwner(req, res, next){
       cypher += "MATCH user -[r:favourites]-> x "
       break;
     case 'metoo_id':
-      cypher += "MATCH user -[r:metoo]-> x ";
+      cypher += "MATCH user -[r:me_too]-> x ";
+      break;
+    case 'like_id':
+      cypher += "MATCH user -[r:likes]-> x ";
       break;
   }
   cypher += "WHERE id(r) = {id}"
@@ -83,7 +86,7 @@ function checkLikeRel(req, res, next){
 
 function checkMetooRel(req, res, next){
   db.rel.read(req.params.metoo_id, function(err, rel){
-    if (!rel || rel.type !== 'metoo') return res.status(401).json({success: false, error: 'Invalid me-too id'});
+    if (!rel || rel.type !== 'me_too') return res.status(401).json({success: false, error: 'Invalid me-too id'});
     return userRelAuth(rel.start, req, res, next)
   })
 }

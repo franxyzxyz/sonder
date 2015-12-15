@@ -15,7 +15,7 @@ router.route('/event/:event_id/likes')
 
 router.route('/timeline/like/:like_id')
   .delete(authController.checkLikeRel,
-          // authController.isSessionUser,
+          authController.isRelOwner,
           likeController.deleteLike)
 
 

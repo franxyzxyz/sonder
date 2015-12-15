@@ -26,14 +26,14 @@ module.exports = function(passport){
       if (err) return callback(err);
 
       if (user.length !== 0){
-        return callback(null, false, {message: 'username exists'})
+        return callback(null, false, {message: 'Oops! username has been taken'})
       }else{
         var newUser = req.body;
         Q.nfcall(validation.fields, req.body, UserSchema, null)
          .then(function(){
            newUser.password = encrypt(newUser.password);
            User.save(newUser, function(err, user){
-             if (err) return callback(null, false, {message: err});
+             if (err) return callback(null, false, {message: err.code});
              return callback(null, newUser, {message: 'successfully signed up'})
            })
          })

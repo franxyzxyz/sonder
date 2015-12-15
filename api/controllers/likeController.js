@@ -12,7 +12,7 @@ function addLike(req, res){
              + "WHERE id(event) = {event_id}"
              + "RETURN r";
   db.query(cypher, {id: parseInt(req.user.id), event_id: parseInt(req.params.event_id)}, function(err, result){
-    if (result.length !== 0) return res.status(401).json({success: false, error: 'already liked', relationship: result[0]});
+    if (result.length !== 0) return res.status(3104).json({success: false, error: 'already liked', relationship: result[0]});
     db.relate(req.user.id, 'likes', req.params.event_id, function(err, rel){
       res.status(200).json({ success: true, relationship: rel})
     })

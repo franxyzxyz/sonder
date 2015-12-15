@@ -8,6 +8,7 @@ router.route('/timeline/:user_id/metoo')
   .get(authController.checkUserNode, metooController.getMetooUsers)
 
 router.route('/event/:event_id/metoo')
+  .get(authController.checkEventNode, metooController.getEventMetoo)
   .post(authController.checkEventNode,
         metooController.addMetoo_event)
 

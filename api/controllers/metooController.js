@@ -3,7 +3,7 @@ var Q           = require("q");
 
 function getMetooUsers(req, res){
   var cypher = "START user = node({id}) "
-             + "MATCH user -[:has_stage]-> stage -[:has_event]-> event <-[r:metoo]- users "
+             + "MATCH user -[:has_stage]-> stage -[:has_event]-> event <-[r:me_too]- users "
              + "RETURN users, r "
   db.query(cypher, {id: parseInt(req.params.user_id)}, function(err, result){
     if (err) return res.status(401).json({success: false, error: err.message});
@@ -18,12 +18,13 @@ function getMetooUsers(req, res){
 function addMetoo_event(req, res){
   var cypher = "START event = node({event_id})"
              + "MATCH user -[:has_stage]-> stage -[:has_event]-> event "
-             + "OPTIONAL MATCH (event)-[r:metoo]->(x:user)"
-             + "RETURN user, r";
+             + "OPTIONAL MATCH x -[r:me_too]-> event "
+             + "RETURN user, r, x";
+
   db.query(cypher, {event_id: parseInt(req.params.event_id)}, function(err, result){
-    if (err) return res.status(401).json({ success: false, error: err });
     if (result[0].user.id == req.user.id) return res.status(401).json({success: false, error: 'cannot me-too own event'});
-    if (result[0].r) return res.status(401).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});
+    if (err) return res.status(401).json({ success: false, error: err });
+    if (result[0].x && result[0].x.id == req.user.id) return res.status(3104).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});
 
     db.relate(req.user.id, 'me_too', req.params.event_id, function(err, rel){
       if (err) return res.status(401).json({ success: false, error: err });
@@ -31,6 +32,10 @@ function addMetoo_event(req, res){
       res.status(200).json({ success: true, relationship: rel});
     })
   })
+}
+
+function getEventMetoo(req, res){
+  getMetooRel(req.params.event_id, 'in', req, res)
 }
 
 function deleteMetoo(req, res){
@@ -41,7 +46,7 @@ function deleteMetoo(req, res){
 }
 
 function getMetooRel(start, direction, req, res){
-  db.relationships(start, direction, 'metoo', function(err, rels){
+  db.relationships(start, direction, 'me_too', function(err, rels){
     if (err) return res.status(401).json({success: false, error: err.message})
     res.status(200).json({metoo_count: rels.length, list: rels});
   });
@@ -49,6 +54,7 @@ function getMetooRel(start, direction, req, res){
 
 module.exports = {
   getMetooUsers : getMetooUsers,
+  getEventMetoo : getEventMetoo,
   addMetoo_event: addMetoo_event,
   deleteMetoo   : deleteMetoo
 }

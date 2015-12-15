@@ -1,9 +1,9 @@
 function fields(newBody, standard, next, callback){
   // newBody = hash, standard = hash
-  if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'fields unmatch';
+  if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'Oops. Fields missing!';
 
   for (prop in newBody){
-    if (Object.keys(standard).indexOf(prop) == -1) throw 'fields unmatch';
+    if (Object.keys(standard).indexOf(prop) == -1) throw 'Oops. Fields missing!';
   }
   if (!next) {return callback(null)}
   return next(newBody, callback)
@@ -24,9 +24,9 @@ function dateRange(params, callback){
 }
 
 function multipleFields(newBody, standard, limitation, next, callback){
-  if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'fields unmatch';
+  if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'Oops. Fields missing!';
   for (prop in newBody){
-    if (Object.keys(standard).indexOf(prop) == -1) throw 'fields unmatch';
+    if (Object.keys(standard).indexOf(prop) == -1) throw 'Oops. Fields missing!';
   }
 
   if (!next) {return callback(null)}
