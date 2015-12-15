@@ -1,0 +1,13 @@
+<div class="miniprofile">
+  <div ng-if="!user.user_detail.anonymous">
+    <img gravatar-src="user.user_detail.email" gravatar-size="100" class="gravatar">
+    <h3 class="text-center"><a ui-sref="showOne({timeline_id:user.user_detail.id})">{{user.user_detail.name}}</a></h3>
+    <div class="mini-basic col-sm-6"><i class="icon ion-location"></i> {{user.user_detail.location}}</div>
+    <div class="mini-basic col-sm-6">{{user.user_detail.industry}}</div>
+    <div class="mini-basic stress">
+      <p ng-if="user.user_detail.role"><i class="icon ion-ios-flame"></i> Currently a {{user.user_detail.role}}</p>
+    </div>
+    <a class="btn-go" ui-sref="showOne({timeline_id:user.user_detail.id})">GET INSPIRED BY {{user.user_detail.name.split(" ")[0]}}</a>
+    <br/>
+  </div>
+</div>

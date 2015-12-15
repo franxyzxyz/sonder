@@ -1,0 +1,54 @@
+<h2 class="text-center">EDIT</h2>
+<section ng-controller="TimelineController">
+  <uib-alert type="success" close="clearMessage()" dismiss-on-timeout="1000" ng-if="message">{{message}}</uib-alert>
+<div class="box-container col-sm-12">
+  <p><a class="question" ng-click="fetchGuide = !fetchGuide; clickInit = !clickInit" ng-class="{'smaller-icon': fetchGuide}"><i class="icon ion-ios-help-outline"></i></a></p>
+  <!-- <div ng-if="fetchGuide" class="addbox">Import basic from Facebook</div> -->
+  <!-- <div class="addbox">Guide Through</div> -->
+  <!-- <a ui-sref="addEvent"><div ng-if="fetchGuide" class="addbox">ADD AN EVENT</div></a> -->
+  <p ng-if="stages.length == 0 && !clickInit">
+    Seems like you haven't started creating your timeline.
+    <br/>Click on '?' to see what you can do to get started!
+  </p>
+  <span ng-controller="PopoverController"><a uib-popover-template="addEvent.templateUrl" popover-title="{{addEvent.title}}" popover-placement="bottom" ng-if="stages.length !== 0"><div ng-if="fetchGuide" class="addbox" >ADD AN EVENT</div></a></span>
+
+  <span ng-controller="PopoverController"><a uib-popover-template="addStage.templateUrl" popover-title="{{addStage.title}}" popover-placement="bottom" ><div ng-if="fetchGuide" class="addbox" ><span ng-if="stages.length == 0">Firstly<br/></span>ADD A STAGE</div></a></span></section>
+</div>
+<section ng-controller="TimelineController">
+  <div class="timeline">
+    <div class="stage-wrapper" ng-repeat="timeline in timelines">
+      <div class="stage-attach">
+        <div class="stageBox">
+          <div class="actionEvent pull-right">
+            <a ui-sref="addEvent({stage: timeline.stage.id})" class="btn btn-action"><i class="icon ion-plus"></i><span>&nbsp;Add Event</span></a>
+            <span ng-controller="ModalController">
+              <a class="btn btn-action" ng-click="open(timeline.stage.id)"><span>Delete Stage</span></a>
+            </span>
+          </div>
+          <h3>{{timeline.stage.title}}</h3>
+          <p class="stageRange pull-right">{{timeline.stage.start | date:'MMM yyyy'}} - {{timeline.stage.end | date:'MMM yyyy'}}</p>
+          <p class="description">"{{timeline.stage.description}}"</p>
+          <div class="eventBox" ng-repeat="event in timeline.event">
+            <span class="pull-right"><a ng-message="Confirm to delete the event?" ng-confirm-click="deleteEvent(event.id)"><i class="icon ion-close"></i></a></span>
+            <h4>{{event.title}}</h4>
+            <p class="eventDate pull-right">{{event.date | date:'MMM yyyy'}}</p>
+            <p>{{event.description}}</p>
+            <p>{{event.event_type}}</p>
+            <p ng-repeat="tag in event.tag">{{tag}}</p>
+          </div>
+        </div>
+        <div class="stage-attachment">
+          <div ng-mouseenter="hover = true" ng-mouseleave="hover = false" class="text-center">
+            <!-- <p ng-if="hover"><a> &nbsp;&nbsp;+&nbsp;&nbsp;</a> </p> -->
+            <p ng-if="hover" ng-controller="PopoverController">
+              <i class="icon ion-minus"></i>
+              <a uib-popover-template="addStage.templateUrl" popover-title="{{addStage.title}}"><i class="icon ion-plus"></i></a>
+              <i class="icon ion-minus"></i>
+            </p>
+            <p ng-if="!hover"><i class="icon ion-minus"></i>&nbsp;<i class="icon ion-minus"></i>&nbsp;<i class="icon ion-minus"></i></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

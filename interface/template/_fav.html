@@ -1,0 +1,8 @@
+<div ng-if="!fav.anonymous" class="fav-box">
+  <a ui-sref="showOne({timeline_id:fav.id})" class="name">{{fav.name}}</a>
+  <div class="message">{{fav.location}}</div>
+  <div class="message">{{fav.industry}}</div>
+  <p>{{fav.email}}</p>
+  <p ng-if="fav.role">{{fav.role}}</p>
+  <img gravatar-src="fav.email" gravatar-size="70" class="gravatar">
+</div>

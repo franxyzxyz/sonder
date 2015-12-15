@@ -1,0 +1,100 @@
+<div ng-if="currentUser" class=" container">
+  <div class="col-sm-offset-3 col-md-offset-4 col-lg-offset-4 col-sm-6 col-md-4 col-lg-4">
+  <h3>General Account Settings</h3>
+    <table class="table table-hover ">
+      <tr>
+        <td class="col-sm-4">Display Name</td>
+        <td class="settings col-sm-6" id="name">
+          <div ng-if="!(edit.name)">{{currentUser.name}}</div>
+          <div ng-if="edit.name" class="editbox">
+            <input type="text" ng-model="editUser.name" required>
+            <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('name')">SAVE</a>
+            <a class="save-btn" ng-click="cancel('name')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('name')" ng-if="!edit.name">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="col-sm-4">Email</td>
+        <td class="settings col-sm-6" id="email">
+          <div ng-if="!(edit.email)">{{currentUser.email}}</div>
+          <div ng-if="edit.email" class="editbox">
+            <input type="text" ng-model="editUser.email" required>
+            <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('email')">SAVE</a>
+            <a class="save-btn" ng-click="cancel('email')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('email')" ng-if="!edit.email">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="col-sm-4">Location</td>
+        <td class="settings col-sm-6" id="location">
+          <div ng-if="!(edit.location)">{{currentUser.location}}</div>
+          <div ng-if="edit.location" class="editbox">
+            <select name="location" ng-model="editUser.location" class="form-control">
+              <option value="">Select your location</option>
+              <option ng-repeat="location in locationsList" value={{location}}>{{location}}</option>
+            </select>
+            <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('location')">SAVE</a>
+            <a class="save-btn" ng-click="cancel('location')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('location')" ng-if="!edit.location">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="col-sm-4">Industry</td>
+        <td class="settings col-sm-6" id="industry">
+          <div ng-if="!(edit.industry)">{{currentUser.industry}}</div>
+          <div ng-if="edit.industry" class="editbox">
+           <select name="industry" ng-model="editUser.industry" class="form-control">
+            <option value="">Select your best matched industry</option>
+            <option ng-repeat="industry in industryList" value={{industry}}>{{industry}}</option>
+          </select>
+          <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('industry')">SAVE</a>
+          <a class="save-btn" ng-click="cancel('industry')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('industry')" ng-if="!edit.industry">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="col-sm-4">Role</td>
+        <td class="settings col-sm-6" id="role">
+          <div ng-if="!(edit.role)">{{currentUser.role}}</div>
+          <div ng-if="edit.role" class="editbox">
+            <input type="text" ng-model="editUser.role" required>
+            <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('role')">SAVE</a>
+            <a class="save-btn" ng-click="cancel('role')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('role')" ng-if="!edit.role">Edit</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="col-sm-4">Privacy</td>
+        <td class="settings col-sm-6" id="anonymous">
+          <div ng-if="!(edit.anonymous)"><p ng-if="!currentUser.anonymous">People will not see your name on your timeline</p><p ng-if="currentUser.anonymous">People will see your name on your timeline</p></div>
+          <div ng-if="edit.anonymous" class="editbox">
+            <label>Do you wish to be anonymous? <a href="">more info</a></label>
+            <label class="col-sm-12"><input type="radio" ng-model="editUser.anonymous" ng-value=false> No (Desired)</label>
+            <label class="col-sm-12"><input type="radio" ng-model="editUser.anonymous" ng-value=true> Yes :(</label>
+            <br/><a type="submit" type="submit" class="save-btn" ng-click="saveSetting('anonymous')">SAVE</a>
+            <a class="save-btn" ng-click="cancel('anonymous')">CANCEL</a>
+          </div>
+        </td>
+        <td class="col-sm-2">
+          <a ng-click="editSetting('anonymous')" ng-if="!edit.anonymous">Edit</a>
+        </td>
+
+      </tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<uib-alert type="success" close="clearMessage()" dismiss-on-timeout="1000" ng-if="message">{{message}}</uib-alert>
+<div ng-if="!token" class="col-sm-offset-3 col-md-offset-4 col-lg-offset-4 col-sm-6 col-md-4 col-lg-4">
+  <h2 class="text-center">Login</h2>
+  <div class="error" ng-if="error">{{error}}</div>
+  <form ng-submit="postLogin()">
+    <div class="form-group">
+      <input ng-model="user.username" type="text" name="user" placeholder="Username" class="form-control"/>
+    </div>
+    <div class="form-group">
+      <input ng-model="user.password" type="password" name="pass" placeholder="Password"  class="form-control"/>
+    </div>
+    <div class="form-group text-center">
+      <p><input type="submit" value="Login" class="form-control btn btn-login"/></p>
+      <p>Not a member yet? <a ui-sref="signup">Sign Up</a></p>
+    </div>
+  </form>
+</div>

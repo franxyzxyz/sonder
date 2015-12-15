@@ -1,0 +1,16 @@
+<div ng-controller="ModalController">
+  <div class="modal-header">
+      <h3 class="modal-title">Delete Stage</h3>
+  </div>
+  <div class="modal-body">
+      <b>Are you sure that you want to delete the stage? (action cannot be reversed...)</b>
+  </div>
+  <div class="modal-footer">
+      <!-- <span ng-controller="TimelineController"> -->
+        <a ng-click="deleteStage(stage_id)" class="btn btn-action"><span>&nbsp;Delete Stage</span></a>
+      <!-- </span> -->
+      <!-- <button class="btn btn-primary" type="button" ng-click="ok()">OK</button> -->
+      <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+
+</div>

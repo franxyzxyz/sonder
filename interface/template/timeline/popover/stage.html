@@ -1,0 +1,26 @@
+<!-- <h3>Add Stage</h3> -->
+<div class="popover-stage">
+  <section ng-controller="TimelineController">
+  <div class="error" ng-if="stageMessage">{{stageMessage}}</div>
+    <form ng-submit="addStage()">
+      <div class="form-group">
+        <input ng-model="newStage.title" type="text" name="title" class="form-control" placeholder="Title for the stage e.g. Rebellious Days"/>
+      </div>
+      <div class="form-group">
+        <label>Start</label>
+        <input ng-model="newStage.start" type="month" name="date" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>End</label>
+        <input ng-model="newStage.end" type="month" name="date"class="form-control"/>
+      </div>
+      <div class="form-group">
+        <textarea name="description" rows="5" ng-model="newStage.description" class="form-control" placeholder="briefly describe what stage is this. e.g. A period that I hated going to school and hearing the word 'social'"></textarea>
+      </div>
+      <div class="form-group text-center">
+        <p><input type="submit" value="Add" class="form-control btn btn-login"/></p>
+      </div>
+    </form>
+  </section>
+</div>
+

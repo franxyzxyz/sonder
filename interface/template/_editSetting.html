@@ -1,0 +1,14 @@
+<tr>
+  <td class="col-sm-4">{{fieldName}}</td>
+  <td class="settings col-sm-6" id="{{fieldName.toLowerCase()}}">
+    <div ng-if="!(edit['email'])">{{field}}</div>
+    <div ng-if="edit['email']" class="editbox">
+      <input type="text" ng-model="editUser.email" required>
+      <p><a type="submit" type="submit" class="save-btn" ng-click="saveSetting()">SAVE</a>
+      <a class="save-btn" ng-click="cancel('email')">CANCEL</a></p>
+    </div>
+  </td>
+  <td class="col-sm-2">
+    <a ng-click="onSave" ng-if="!edit.email">Edit</a>
+  </td>
+</tr>

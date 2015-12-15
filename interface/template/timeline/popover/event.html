@@ -1,0 +1,35 @@
+<section ng-controller="TimelineController">
+  <form ng-submit="addEvent()" ng-if="stages.no_of_stages !== 0">
+    <div class="form-group">
+      <input ng-model="newEvent.title" type="text" name="title" placeholder="Title" class="form-control" required/>
+    </div>
+    <div class="form-group">
+      <input ng-repeat="stage in stages" ng-if="specific_stage == stage.id" type="text" disabled value="{{stage.title}} ({{stage.start | date:'MMM yyyy'}} - {{stage.end | date:'MMM yyyy'}})" ng-value={{stage.id}} class="form-control">
+      <select ng-if="!specific_stage" name="category" ng-model="newEvent.to_stage.id" class="form-control" required>
+        <option value="">Add to stage</option>
+        <option ng-repeat="stage in stages" value={{stage.id}}>{{stage.title}} ({{stage.start | date:'MMM yyyy'}} - {{stage.end | date:'MMM yyyy'}})</option>
+      </select>
+    </div>
+    <div class="form-group" ng-if="newEvent.to_stage.id">
+      <label class="col-sm-4" class="control-label">Date</label>
+      <div class="col-sm-8">
+        <input ng-model="newEvent.date" type="month" name="date" placeholder="MM-yyyy" class="form-control" min="{{newEvent.to_stage.start | date:'yyyy-MM'}}" max="{{newEvent.to_stage.end | date:'yyyy-MM'}}" required/>
+      </div>
+    </div>
+    <div class="form-group">
+      <select name="category" ng-model="newEvent.event_type" class="form-control" required>
+        <option value="">Select the best matched category</option>
+        <option ng-repeat="category in categoryList" value={{category}}>{{category}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <textarea name="description" rows="5" ng-model="newEvent.description" class="form-control" placeholder="desciprtion"> </textarea>
+    </div>
+    <div class="form-group">
+      <input ng-model="newEvent.tag" type="text" name="tag" placeholder="Tag it eg.#IReallyHatedSchool" class="form-control"/>
+    </div>
+    <div class="form-group text-center">
+      <p><input type="submit" value="Add" class="form-control btn btn-login"/></p>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,8 @@
+<section ng-controller="FavController">
+  <h3 class="text-center">List of favourite</h3>
+  <div class="fav-wrapper">
+    <div ng-repeat="fav in favourite.users" class="col-sm-4 fav-list">
+    <favlist fav="fav"></favlist>
+    </div>
+  </div>
+</section>

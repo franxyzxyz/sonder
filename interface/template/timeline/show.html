@@ -1,0 +1,82 @@
+<section ng-controller="ShowController">
+<uib-alert type="danger" close="clearError()" dismiss-on-timeout="1000" ng-if="error">{{error}}</uib-alert>
+  <div class="timeline_info center-block">
+    <div class="info-wrapper">
+      <div class="profile-pic">
+        <img ng-if="user.anonymous" gravatar-src="" gravatar-size="100" class="gravatar">
+        <img ng-if="!user.anonymous" gravatar-src="user.email" gravatar-size="100" class="gravatar">
+      </div>
+      <div class="basic-info">
+        <p ng-if="!user.anonymous">{{user.name}}</p>
+        <div class="mock-up"><div class="arrow-left arrow-basic"></div><span class="message">{{user.location}}</span></div>
+        <div class="mock-up"><div class="arrow-left arrow-basic" ></div><span class="message">{{user.industry}}</span></div>
+      </div>
+    </div>
+
+    <div class="info_wrapper">
+      <div class="col-sm-12">
+        <div class="mock-up" ng-if="user.role"><div class="arrow-left"></div><span class="message">Currently {{user.role}} in {{user.industry}}</span></div>
+      </div>
+      <div class="col-sm-12 inline-info">
+        <div class="mock-up"><div class="arrow-left arrow-fav"></div><a ng-click="favUser()" class="btn-fav" ng-mouseenter="favhover = true" ng-mouseleave="favhover = false"><i class="fa fa-hand-spock-o"></i><!-- <i class="icon ion-android-bulb"></i> --> + <!-- <span ng-if="hover">{{fav.count +1 }}</span> --><span >{{fav.count}}</span></a></div>
+        <!-- <div class="mock-up"><div class="arrow-left"></div><span class="message">{{user.location}}</span></div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="stage-wrapper" ng-repeat="timeline in timelines">
+      <div class="stage-attach show-wrapper">
+        <div class="stageBox">
+          <h3>{{timeline.stage.title}}</h3>
+          <p class="stageRange pull-right">{{timeline.stage.start | date:'MMM yyyy'}} - {{timeline.stage.end | date:'MMM yyyy'}}</p>
+          <p class="description">"{{timeline.stage.description}}"</p>
+          <div class="eventBox" ng-repeat="event in timeline.events">
+            <h4>{{event.event.title}}</h4>
+            <p class="eventDate pull-right">{{event.event.date | date:'MMM yyyy'}}</p>
+            <p>{{event.event.description}}</p>
+            <p>{{event.event.event_type}}</p>
+            <p ng-repeat="tag in event.event.tag">{{tag}}</p>
+            <div class="utility">
+              <div class="status_box">
+                <div class="col-sm-6">
+                  <!-- <div class="status_head">ME TOO!</div><div>0</div> -->
+                  <a ng-click="event.likes.clicked = false;showMetooList(event.event.id)" class="status_digest" ng-mouseenter="metoo_hover = true" ng-mouseleave="metoo_hover = false"><div class="status_head">ME TOO!</div><div class="status_figure" ng-class="{'highlighted' : metoo_hover}">{{event.metoo.metoo_count}}</div></a>
+                </div>
+                <div class="col-sm-6">
+                  <a ng-click="event.metoo.clicked = false;showLikeList(event.event.id)" class="status_digest" ng-mouseenter="hover = true" ng-mouseleave="hover = false"><div class="status_head">LIKES</div><div class="status_figure" ng-class="{'highlighted' : hover}">{{event.likes.like_count}}</div></a>
+                </div>
+              </div>
+              <div class="status_detail" ng-if="event.likes.clicked">
+                <span ng-repeat="user in event.likes.list">
+                  <a ui-sref="showOne({timeline_id:user.user_detail.id})"><img ng-if="user.user_detail.anonymous" gravatar-src="" gravatar-size="30" class="gravatar"></a>
+                  <a ng-if="!user.user_detail.anonymous" popover-animation="true" popover-placement="top" uib-popover-template="miniprofile.templateUrl" class="popover-leader" uib-tooltip={{user.user_detail.name}} tooltip-class="btn-guide" tooltip-placement="bottom">
+                    <img ng-if="!user.user_detail.anonymous" gravatar-src="user.user_detail.email" gravatar-size="30" class="gravatar">
+                  </a>
+                </span>
+              </div>
+              <div class="status_detail" ng-if="event.metoo.clicked">
+                <span ng-repeat="user in event.metoo.list">
+                  <a ui-sref="showOne({timeline_id:user.user_detail.id})"><img ng-if="user.user_detail.anonymous" gravatar-src="" gravatar-size="30" class="gravatar"></a>
+                  <a ng-if="!user.user_detail.anonymous" popover-animation="true" popover-placement="top" uib-popover-template="miniprofile.templateUrl" class="popover-leader" uib-tooltip={{user.user_detail.name}} tooltip-class="btn-guide" tooltip-placement="bottom">
+                    <img ng-if="!user.user_detail.anonymous" gravatar-src="user.user_detail.email" gravatar-size="30" class="gravatar">
+                  </a>
+                </span>
+              </div>
+              <a ng-click="postLike(event.event.id)" class="btn" ng-class="{'btn-like': event.likes.byme}" uib-tooltip="Like This" tooltip-class="btn-guide" tooltip-placement="bottom"><i class="icon ion-star"></i> LIKE ({{event.likes.like_count}})</a>
+              <a ng-click="postMetoo(event.event.id)" class="btn" ng-class="{'btn-metoo': event.metoo.byme}" uib-tooltip="SAY 'ME TOO!'" tooltip-class="btn-guide" tooltip-placement="bottom"><i class="icon ion-android-hand"></i> 'ME TOO!' ({{event.metoo.metoo_count}})</a>
+              <!-- <a href="" class="btn btn-metoo" uib-tooltip="Say 'ME TOO!'" tooltip-class="btn-guide" tooltip-placement="bottom"><i class="icon ion-android-hand"></i> 'ME TOO!'</a> -->
+            </div>
+          </div>
+        </div>
+        <div class="stage-attachment">
+          <p class="text-center"><i class="icon ion-minus"></i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="recommend">
+    <h3><b>You might also like...</b></h3>
+  </div>
+</section>

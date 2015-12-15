@@ -1,0 +1,42 @@
+<div class="col-sm-offset-3 col-md-offset-4 col-lg-offset-4 col-sm-6 col-md-4 col-lg-4">
+  <h2 class="text-center">Sign Up</h2>
+  <div class="error" ng-if="error">{{error}}</div>
+  <form ng-submit="postSignup()">
+    <div class="form-group">
+      <input ng-model="newUser.username" type="text" name="user" placeholder="Username" class="form-control"/>
+    </div>
+    <div class="form-group">
+      <input ng-model="newUser.password" type="password" name="pass" placeholder="Password"  class="form-control"/>
+    </div>
+    <div class="form-group">
+      <input ng-model="newUser.email" type="email" name="email" placeholder="Email"  class="form-control"/>
+    </div>
+    <div class="form-group">
+      <input ng-model="newUser.name" type="text" name="name" placeholder="Display Name (First Name + Last Name)"  class="form-control"  />
+    </div>
+    <div class="form-group">
+      <select name="location" ng-model="newUser.location" class="form-control">
+        <option value="">Select your location</option>
+        <option ng-repeat="location in locationsList" value={{location}}>{{location}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select name="industry" ng-model="newUser.industry" class="form-control">
+        <option value="">Select your best matched industry</option>
+        <option ng-repeat="industry in industryList" value={{industry}}>{{industry}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <input ng-model="newUser.role" type="text" name="role" placeholder="Best described your current role. eg: Superman"  class="form-control"/>
+    </div>
+    <div class="form-group">
+      <label>Do you wish to be anonymous? <a uib-tooltip="As anonymous, people will not know who you are while viewing your timeline" tooltip-class="btn-question" class="mini-query"><i class="icon ion-ios-help-outline mini-qiery "></i></a></label>
+      <label class="col-sm-6"><input type="radio" ng-model="newUser.anonymous" ng-value=false> No (Desired)</label>
+      <label class="col-sm-6"><input type="radio" ng-model="newUser.anonymous" ng-value=true> Yes :(</label>
+    </div>
+    <div class="form-group text-center">
+      <p><input type="submit" value="Sign Up" class="form-control btn btn-login"/></p>
+      <p>Already a member? <a ui-sref="login">login</a> to Sonder</p>
+    </div>
+  </form>
+</div>
