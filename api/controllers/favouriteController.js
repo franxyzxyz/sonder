@@ -9,8 +9,8 @@ function addFavourite(req, res){
              + "RETURN r";
   if (req.user.id == req.params.user_id) return res.status(401).json({success: false, error: ':( cannot favourite yourself in Sonder Sorry, but you can mentally favourite yourself :D'});
 
-  db.query(cypher, {id: parseInt(req.user.id), otherUser: parseInt(req.params.user_id)}, function(err, result){
-    if (result.length !== 0) return res.status(3104).json({success: false, error: 'Oops! Seems like this is already on your favourite list!', relationship: result[0]});
+db.query(cypher, {id: parseInt(req.user.id), otherUser: parseInt(req.params.user_id)}, function(err, result){
+    if (result.length !== 0) return res.status(409).json({success: false, error: 'Oops! Seems like this is already on your favourite list!', relationship: result[0]});
     db.relate(req.user.id, 'favourites', req.params.user_id, function(err, rel){
       res.status(200).json({ success: true, relationship: rel})
     })

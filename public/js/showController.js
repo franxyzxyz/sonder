@@ -74,7 +74,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
         };
       })
     }, function(error){
-      if (error.status == 3104){
+      if (error.status == 409){
         return timelineHelper.deleteMetoo(error.data.relationship.id).then(function(res){
           $scope.timelines.forEach(function(timeline, idx){
             var event_idx = _.findIndex(timeline.events, function(event){
@@ -109,7 +109,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
             }
           })
          }, function(error){
-          if (error.status == 3104){
+          if (error.status == 409){
             return timelineHelper.deleteLike(error.data.relationship.id).then(function(res){
                     $scope.timelines.forEach(function(timeline, idx){
                       var event_idx = _.findIndex(timeline.events, function(event){
@@ -135,7 +135,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
           $scope.fav.users.push(res.data.relationship)
           $scope.fav.count += 1;
          }, function(error){
-          if (error.status == 3104) {
+          if (error.status == 409) {
             return timelineHelper.deleteFav(error.data.relationship.id).then(function(res){
               $scope.fav.users = _.filter($scope.fav.users, function(elem){
                 return elem.id !== error.data.relationship.id

@@ -24,7 +24,7 @@ function addMetoo_event(req, res){
   db.query(cypher, {event_id: parseInt(req.params.event_id)}, function(err, result){
     if (result[0].user.id == req.user.id) return res.status(401).json({success: false, error: 'cannot me-too own event'});
     if (err) return res.status(401).json({ success: false, error: err });
-    if (result[0].x && result[0].x.id == req.user.id) return res.status(3104).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});
+    if (result[0].x && result[0].x.id == req.user.id) return res.status(409).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});
 
     db.relate(req.user.id, 'me_too', req.params.event_id, function(err, rel){
       if (err) return res.status(401).json({ success: false, error: err });

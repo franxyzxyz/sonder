@@ -1,4 +1,5 @@
 function getTimelines(req, res){
+  console.log(req.user)
   // return lists of timelines base on relationship of req.user
   // 1) meToo relationships
   // 2) favourites
