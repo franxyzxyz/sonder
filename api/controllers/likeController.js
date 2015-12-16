@@ -32,10 +32,30 @@ function getLikeRel(start, direction, req, res){
     res.status(200).json({like_count: rels.length, list: rels});
   });
 }
+function getLike(req, res){
+  var cypher = "START r = relationship({like_id})"
+             + "MATCH user -[r:likes]-> event "
+             + "RETURN user";
+  db.query(cypher, {like_id: parseInt(req.params.like_id)}, function(err, result){
+    console.log(result)
+  })
+}
+
+function getLikedBy(req, res){
+  var cypher = "START user = node({id})"
+             + "MATCH user -[:has_stage]-> () -[:has_event]-> () <-[r:likes]- users "
+             + "RETURN r, users";
+  db.query(cypher, {id: parseInt(req.user.id)}, function(err, result){
+    if (err||!result){ return res.status(401).json({success:false, error:err || 'failed'})}
+    res.status(200).json({like_count: result.length, list: result});
+  })
+}
 
 module.exports = {
   getLikedEvents  : getLikedEvents,
   getEventLikes   : getEventLikes,
   addLike         : addLike,
-  deleteLike      : deleteLike
+  deleteLike      : deleteLike,
+  getLike         : getLike,
+  getLikedBy      : getLikedBy
 }

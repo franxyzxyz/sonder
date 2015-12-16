@@ -1,6 +1,5 @@
 function fields(newBody, standard, next, callback){
   // newBody = hash, standard = hash
-  console.log(Object.keys(newBody),Object.keys(standard))
   if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'Oops. Fields missing!';
 
   for (prop in newBody){

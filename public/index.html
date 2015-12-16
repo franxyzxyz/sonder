@@ -22,6 +22,8 @@
   <script src="js/userController.js"></script>
   <script src="js/showController.js"></script>
   <script src="js/favController.js"></script>
+  <script src="js/recController.js"></script>
+  <script src="js/exploreController.js"></script>
   <script src="js/timelineController.js"></script>
   <script src="js/factories.js"></script>
   <script src="js/directives.js"></script>
@@ -33,7 +35,7 @@
     <h1 class="text-center">SONDER</h1>
     <section ng-controller="UserController">
       <ul class="nav text-center">
-        <li class="pull-left"><a hui-sref-active="active" ui-sref="login">HOME</a></li>
+        <li class="pull-left" ng-if="token"><a hui-sref-active="active" ui-sref="landing">HOME</a></li>
         <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="login">LOGIN</a></li>
         <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="signup">SIGN UP</a></li>
         <li ng-if="token" class="pull-right"><a ng-click="logout()">LOGOUT</a></li>
@@ -43,7 +45,7 @@
         <li ng-if="token" class="pull-left"><a ui-sref="showOne({timeline_id:currentUser.id})">VIEW</a></li>
         <li ng-if="token" class="pull-left"><a ui-sref="favList({user_id:currentUser.id})">FAVOURITE</a></li>
       </ul>
-      <div ui-view></div>
+      <div ui-view class="view"></div>
     </section>
   </div>
 </div>

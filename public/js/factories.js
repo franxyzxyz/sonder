@@ -42,6 +42,36 @@ app.factory('timelineHelper', function($http, $q){
     },
     updateUser: function(user_id, newBody){
       return $http.put("http://" + location.host + '/api/user/' + user_id, newBody)
+    },
+    getExplore: function(){
+      return $http.get("http://" + location.host + '/api/timelines')
+    },
+    getFav: function(user_id){
+      return $http.get("http://" + location.host + '/api/user/' + user_id + "/favourites")
+    },
+    getUserLikes: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + user_id + "/likes")
+    },
+    getMetooBy: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + user_id + "/metoo")
+    },
+    getLikeDetail: function(like_id){
+      return $http.get("http://" + location.host + '/api/timeline/like/' + like_id)
+    },
+    getLikedBy: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + user_id + "/likedby")
+    },
+    getFavBy: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + user_id + "/favourites")
+    },
+    getRecommend: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/recommend/' + user_id)
+    },
+    getFavRec: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/recommend/' + user_id + "/fav")
+    },
+    getRandom: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/recommend/' + user_id + "/random")
     }
   }
 });

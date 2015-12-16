@@ -1,0 +1,94 @@
+<section ng-controller="ExploreCtrl">
+  <div class="explore-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-10">
+    <div class="exp-info col-sm-offset-1 col-sm-3 col-md-offset-1 col-md-3 col-lg-offset-3 col-lg-3">
+      <div ng-if="token">
+        <h3>{{user.info.name}}</h3>
+        <p><i class="icon ion-briefcase"></i>&nbsp;{{user.info.industry}}</p>
+        <p><i class="icon ion-star"></i>&nbsp;{{user.info.role}}</p>
+        <p><i class="icon ion-ios-location"></i>&nbsp;{{user.info.location}}</p>
+        <div class="utility">
+          <div class="status_box">
+            <div class="col-sm-4" uib-tooltip="Those who said 'ME TOO!' to you" tooltip-class="btn-stat" tooltip-placement="top" ng-click="metooby()">
+              <a class="status_digest"><div class="status_head">'ME TOO!' BY</div><div class="status_figure">{{user.metooby.metoo_count}}</div></a>
+            </div>
+            <div class="col-sm-4" uib-tooltip="Those who have liked events of yours" tooltip-class="btn-stat" tooltip-placement="top" ng-click="likedby()">
+              <a class="status_digest"><div class="status_head">LIKED BY</div><div class="status_figure">{{user.likedby.like_count}}</div></a>
+            </div>
+            <div class="col-sm-4" uib-tooltip="Those who have favourited you" tooltip-class="btn-stat" tooltip-placement="top" ng-click="favby()">
+              <a class="status_digest"><div class="status_head">FAV BY</div><div class="status_figure">{{user.faved.length}}</div></a>
+            </div>
+          </div>
+          <div class="float-container col-sm-12 col-md-12 col-lg-12" ng-if="fetchMetoo">
+            <h3 class="text-center explorer-header mini">'ME-TOO!' BY</h3>
+            <div class="result-list">
+              <span ng-repeat="metoo in user.metoolist"><a ui-sref="showOne({timeline_id:metoo.id})"><img ng-if="!metoo.anonymous" gravatar-src="metoo.email" gravatar-size="30" class="gravatar" uib-tooltip={{metoo.name}}&nbsp;-&nbsp;{{metoo.role}} tooltip-class="btn-stat" tooltip-placement="right"><img ng-if="metoo.anonymous" gravatar-src="" gravatar-size="30" class="gravatar" uib-tooltip=Anonymous&nbsp;-&nbsp;{{metoo.role}} tooltip-class="btn-stat" tooltip-placement="right" ></a>
+              </span>
+            </div>
+          </div>
+          <div class="float-container col-sm-12 col-md-12 col-lg-12" ng-if="fetchLiked">
+            <h3 class="text-center explorer-header mini">LIKED BY</h3>
+            <div class="result-list">
+              <span ng-repeat="like in user.likeUnique"><a ui-sref="showOne({timeline_id:like.id})"><img ng-if="!like.anonymous" gravatar-src="like.email" gravatar-size="30" class="gravatar" uib-tooltip={{like.name}}&nbsp;-&nbsp;{{like.role}} tooltip-class="btn-stat" tooltip-placement="right" ><img ng-if="like.anonymous" gravatar-src="" gravatar-size="30" class="gravatar" uib-tooltip=Anonymous&nbsp;-&nbsp;{{like.role}} tooltip-class="btn-stat" tooltip-placement="right" ></a>
+              </span>
+            </div>
+          </div>
+          <div class="float-container col-sm-12 col-md-12 col-lg-12" ng-if="fetchFav">
+            <h3 class="text-center explorer-header mini">FAVOURITED BY</h3>
+            <div class="result-list">
+              <span ng-repeat="fav in user.faved"><a ui-sref="showOne({timeline_id:fav.id})"><img ng-if="!fav.anonymous" gravatar-src="fav.email" gravatar-size="30" class="gravatar" uib-tooltip={{fav.name}}&nbsp;-&nbsp;{{fav.role}} tooltip-class="btn-stat" tooltip-placement="right"><img ng-if="fav.anonymous" gravatar-src="" gravatar-size="30" class="gravatar" uib-tooltip=Anonymous&nbsp;-&nbsp;{{fav.role}} tooltip-class="btn-stat" tooltip-placement="top"></a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content col-sm-8 col-md-8 col-lg-6">
+      <div class="container">
+        <h3 class="col-sm-12 col-md-12 col-lg-10 text-center explorer-header">EXPLORE</h3>
+        <div ng-repeat="oneline in exploreMetoo">
+          <div class="userbox col-sm-12 col-md-12 col-lg-10" ng-if="oneline.user.id != me">
+            <div class="top-container">
+              <div class="userinfo col-sm-12">
+                <div class="userinfo-wrapper">
+                  <h3>
+                    <a ui-sref="showOne({timeline_id:oneline.user.id})"><span ng-if="!oneline.user.anonymous">{{oneline.user.name}}</span><span ng-if="oneline.user.anonymous">Anonymous</span></a>
+                  </h3>
+                  <p ng-if="oneline.random" class="fetch_type">EXPLORE</p>
+                  <p ng-if="oneline.metoo" class="fetch_type me-too">BASED ON ME-TOO</p>
+                  <p ng-if="oneline.fav" class="fetch_type fav">BASED ON FAVOURITE</p>
+
+                  <div class="userinfo-list-wrapper">
+                    <div class="mock-up stack-up" ng-if="oneline.user.role"><div class="arrow-top"></div><span class="explore-info">{{oneline.user.role}}</span></div>
+                    <div class="mock-up stack-up"><div class="arrow-top"></div><span class="explore-info scn-info">{{oneline.user.location}}</span></div>
+                    <div class="mock-up stack-up"><div class="arrow-top"></div><span class="explore-info scn-info">{{oneline.user.industry}}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <div class="utility">
+                <div class="status_box">
+                  <div class="col-sm-6 stat-hover" uib-tooltip="CLICK FOR STAGES QUICK VIEW" tooltip-class="btn-stat" tooltip-placement="top" ng-click="stageclicked[oneline.user.id] = !stageclicked[oneline.user.id]; eventclicked[oneline.user.id] = false">
+                    <a class="status_digest "><div class="status_head">STAGES</div><div class="status_figure">{{oneline.stage.length || 0}}</div></a>
+                  </div>
+                  <div class="col-sm-6 stat-hover" uib-tooltip="CLICK FOR EVENTS QUICK VIEW" tooltip-class="btn-stat" tooltip-placement="top"  ng-click="eventclicked[oneline.user.id] = !eventclicked[oneline.user.id];stageclicked[oneline.user.id] = false;">
+                    <a class="status_digest"><div class="status_head">EVENTS</div><div class="status_figure">{{oneline.event.length || 0}}</div></a>
+                  </div>
+                </div>
+              </div>
+            <div class="stage_info col-sm-12">
+              <div class="mock-up" ng-if="oneline.stage && stageclicked[oneline.user.id]">
+                <span ng-repeat="stage in oneline.stage" class="seperator"><div class="arrow-left"></div><span class="explore-stage"><a ui-sref="showOne({timeline_id:oneline.user.id})"><big>{{stage.title}}</big></a><br/><span><span class="desp">{{stage.description}}</span></span></span>
+              </div>
+            </div>
+            <div class="eventinfo col-sm-12">
+              <div class="mock-up" ng-if="oneline.event && eventclicked[oneline.user.id]">
+                <span ng-repeat="event in oneline.event" class="seperator"><span class="explore-event"><a ui-sref="showOne({timeline_id:oneline.user.id})"><big>{{event.title}}</big></a><br/><span class="pull-right desp"><i class="fa fa-list desp"></i>&nbsp;{{event.event_type}}</span></span><div class="arrow-left"></div></span>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="">{{oneline.event}}</div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -52,6 +52,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
         $window.sessionStorage.sid = data.user.id;
         $scope.token = $window.sessionStorage.token;
         $scope.message = 'Welcome! ' + $scope.currentUser.name;
+        $state.go('landing');
       })
       .error(function(data, status, headers, config){
         delete $window.sessionStorage.token;
@@ -81,9 +82,10 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
     $scope.token = null;
     $scope.message = '';
     $scope.currentUser = null;
-    $state.go('login');
     delete $window.sessionStorage.sid;
     delete $window.sessionStorage.token;
+    $window.location.reload();
+    $state.go('login');
   }
   $scope.editSetting = function(field){
     for (prop in $scope.currentUser){
@@ -96,7 +98,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
       $scope.currentUser = res.data.user;
       $scope.cancel(field)
     }, function(error){
-      console.log(error.data)
+      $scope.error = error.error
     })
   }
   $scope.cancel = function(field){

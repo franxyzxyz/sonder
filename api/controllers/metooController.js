@@ -1,5 +1,6 @@
 var validation  = require('../helpers/validation')
 var Q           = require("q");
+var _           = require('underscore');
 
 function getMetooUsers(req, res){
   var cypher = "START user = node({id}) "
@@ -19,9 +20,10 @@ function addMetoo_event(req, res){
   var cypher = "START event = node({event_id})"
              + "MATCH user -[:has_stage]-> stage -[:has_event]-> event "
              + "OPTIONAL MATCH x -[r:me_too]-> event "
+             + "WHERE id(x) = {my_id} "
              + "RETURN user, r, x";
 
-  db.query(cypher, {event_id: parseInt(req.params.event_id)}, function(err, result){
+  db.query(cypher, {event_id: parseInt(req.params.event_id),my_id: parseInt(req.user.id)}, function(err, result){
     if (result[0].user.id == req.user.id) return res.status(401).json({success: false, error: 'cannot me-too own event'});
     if (err) return res.status(401).json({ success: false, error: err });
     if (result[0].x && result[0].x.id == req.user.id) return res.status(409).json({success: false, error: 'already me-too-ed the event', relationship: result[0].r});

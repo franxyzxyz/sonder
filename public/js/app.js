@@ -11,6 +11,10 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
       url: "/",
       templateUrl: "template/login.html"
     })
+    .state('landing',{
+      url: "/explore",
+      templateUrl: "template/explore.html"
+    })
     .state('login', {
       url: "/login",
       templateUrl: "template/login.html"

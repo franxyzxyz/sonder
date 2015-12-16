@@ -14,9 +14,13 @@ router.route('/event/:event_id/likes')
         likeController.addLike)
 
 router.route('/timeline/like/:like_id')
+  .get(authController.checkLikeRel, likeController.getLike)
   .delete(authController.checkLikeRel,
           authController.isRelOwner,
           likeController.deleteLike)
+
+router.route('/timeline/:user_id/likedby')
+  .get(authController.checkUserNode, likeController.getLikedBy)
 
 
 module.exports = router
