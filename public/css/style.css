@@ -1,6 +1,16 @@
 body{
   font-family: 'Montserrat', sans-serif;
 }
+a.sonder{
+  color:#444;
+}
+.popover-row{
+  padding:10px;
+}
+a.sonder:hover, a.sonder:active, a.sonder:link{
+  color:#777;
+  text-decoration: none;
+}
 .container{
   width:100%;
   margin:0px;
@@ -22,6 +32,9 @@ h2{
 }
 .wrapper{
   margin:0px;
+  overflow:auto;
+}
+.alert-box{
   overflow:auto;
 }
 .btn-login{
@@ -303,6 +316,13 @@ span.message{
   vertical-align: middle;
   display:inline-block;
 }
+.detail-info{
+  margin:0 auto;
+}
+.detail-wrapper{
+  margin:0 auto;
+  text-align:left;
+}
 .basic-info{
   text-align:left !important;
 }
@@ -342,6 +362,13 @@ span.message{
   text-align:center;
   top:20vh;
   left:30vw;
+  z-index:4;
+}
+.alert-login{
+  position:relative;
+  top:0;
+  left:0;
+  width:100%;
 }
 .status_box {
   border-top:1px solid #ccc;
@@ -618,10 +645,26 @@ span.explore-event a:hover, span.explore-stage a:hover{
   /*background:orange; */
   padding:40px 20px 20px 20px;
 }
+.no-padding{
+  padding:0px;
+  margin: 0 auto;
+}
+.img-box{
+  vertical-align: middle;
+  padding-top:40px;
+}
 .exp-info h3{
   font-weight:700;
   padding-bottom:10px;
   border-bottom:1px solid #ccc;
+  color: #444;
+}
+.exp-info a.name-link{
+  color: #444;
+}
+.exp-info a.name-link:hover{
+  text-decoration: none;
+  color:#ccc !important;
 }
 .exp-info p{
   font-size:16px;
@@ -767,4 +810,26 @@ span.seperator{
 }
 .float-img:hover{
   opacity:0.5;
+}
+.guide-box{
+  background:#DD524A;
+  padding:10px;
+  color:white;
+  font-size:20px;
+  box-shadow: 2px 2px #ccc;
+}
+.guide-box a{
+  color:#fff;
+  text-decoration: none
+}
+.guide-box:hover{
+  opacity:0.7;
+}
+.about-wrapper{
+  margin:0 auto;
+  text-align: center;
+  overflow:auto;
+}
+.about-header{
+  padding:20px;
 }

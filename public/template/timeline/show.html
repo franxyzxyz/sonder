@@ -1,22 +1,27 @@
 <section ng-controller="ShowController">
 <uib-alert type="danger" close="clearError()" dismiss-on-timeout="1000" ng-if="error">{{error}}</uib-alert>
-  <div class="timeline_info center-block">
-    <div class="info-wrapper">
-      <div class="profile-pic">
-        <img ng-if="user.anonymous" gravatar-src="" gravatar-size="100" class="gravatar">
-        <img ng-if="!user.anonymous" gravatar-src="user.email" gravatar-size="100" class="gravatar">
-      </div>
-      <div class="basic-info">
-        <p ng-if="!user.anonymous">{{user.name}}</p>
-        <div class="mock-up"><div class="arrow-left arrow-basic"></div><span class="message">{{user.location}}</span></div>
-        <div class="mock-up"><div class="arrow-left arrow-basic" ></div><span class="message">{{user.industry}}</span></div>
+  <div class="timeline_info detail-info">
+    <div class="col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4" >
+      <div class="detail-wrapper container">
+        <div class="exp-info no-padding col-sm-12" >
+          <div class="col-sm-3 text-right img-box">
+            <img ng-if="user.anonymous" gravatar-src="" gravatar-size="80" class="gravatar">
+            <img ng-if="!user.anonymous" gravatar-src="user.email" gravatar-size="80" class="gravatar">
+          </div>
+          <div class="col-sm-9">
+            <h3 ng-if="!user.anonymous">{{user.name}}</h3>
+            <p><i class="icon ion-star"></i>&nbsp;{{user.role}}</p>
+            <p><i class="icon ion-briefcase"></i>&nbsp;{{user.industry}}</p>
+            <p><i class="icon ion-ios-location"></i>&nbsp;{{user.location}}</p>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="info_wrapper">
-      <div class="col-sm-12">
-        <div class="mock-up" ng-if="user.role"><div class="arrow-left"></div><span class="message">{{user.role}}</span></div>
-      </div>
+      <!-- <div class="col-sm-12"> -->
+        <!-- <div class="mock-up" ng-if="user.role"><div class="arrow-left"></div><span class="message">{{user.role}}</span></div> -->
+      <!-- </div> -->
       <div class="col-sm-12 inline-info">
         <div class="mock-up"><div class="arrow-left arrow-fav"></div><a ng-click="favUser()" class="btn-fav" ng-mouseenter="favhover = true" ng-mouseleave="favhover = false"><i class="fa fa-hand-spock-o"></i><!-- <i class="icon ion-android-bulb"></i> --> + <!-- <span ng-if="hover">{{fav.count +1 }}</span> --><span >{{fav.count}}</span></a></div>
         <!-- <div class="mock-up"><div class="arrow-left"></div><span class="message">{{user.location}}</span></div> -->

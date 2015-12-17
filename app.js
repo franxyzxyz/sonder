@@ -22,6 +22,7 @@ db = require("seraph")({
   user: url.auth.split(':')[0],
   pass: url.auth.split(':')[1]
 });
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,6 +46,9 @@ app.get('/', function(req, res){
 
 var helperRoutes = require('./api/config/helperRoutes')
 app.use('/api', helperRoutes)
+
+var publicRoutes = require('./api/config/publicRoutes')
+app.use('/', publicRoutes)
 
 // var helper_method = require('./helpers/helper_function');
 var userRoutes = require('./api/config/userRoutes')

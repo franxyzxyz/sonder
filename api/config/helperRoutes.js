@@ -15,4 +15,8 @@ router.get('/helper/location', function(req, res){
 router.get('/helper/category', function(req, res){
   res.status(200).json({category: _.values(formList.category).sort()})
 })
+
+router.get('/helper/all', function(res, res){
+  res.status(200).json({industry: formList.industry,location: _.values(formList.location).sort(),category: _.values(formList.category).sort()})
+})
 module.exports = router

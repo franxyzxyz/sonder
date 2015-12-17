@@ -144,9 +144,9 @@ function fetchUser(user_id, callback){
 }
 
 function randomFetch(user_id, callback){
-  var cypher = "MATCH (n:user)"
-             + "WHERE id(n) <> {id}"
-             + "RETURN n" ;
+    var cypher = "MATCH (n:user)"
+               + "WHERE id(n) <> {id}"
+               + "RETURN n" ;
   db.query(cypher, {id: parseInt(user_id)}, function(err, result){
     if(err){console.log(err)}
     return callback(null, result)
@@ -199,7 +199,13 @@ function genArray(result, method, callback){
    })
 }
 function getRandom(req, res){
-   Q.nfcall(randomFetch, req.params.user_id)
+  if(!req.params.user_id){
+    var user_id = Math.random()*1000;
+  }else{
+    var user_id = req.params.user_id;
+  }
+  console.log(user_id)
+   Q.nfcall(randomFetch, user_id)
     .then(function(value){
       return Q.nfcall(fetchUsers, value)
               .then(function(result){
@@ -213,6 +219,7 @@ function getRandom(req, res){
       res.status(401).json({success:false, error:error})
     })
 }
+
 function lineMetoo(user_id, callback){
   var metoo_cypher = "START user = node({id})"
              + "MATCH (user) -[:has_stage]-> () -[:has_event]-> (event)"

@@ -1,5 +1,6 @@
 <section ng-controller="FavController">
-  <h3 class="text-center">List of favourite</h3>
+  <h2 class="text-center">YOUR FAVOURITES</h2>
+  <div class="top-notice text-center" ng-if="!favourite.user.length"><div class="arrow-top"></div><span class="empty"><i class="icon ion-alert-circled"></i><br/>Not yet..not yet..</span><a class="btn-go" ui-sref="landing">GET INSPIRATION</a></div>
   <div class="fav-wrapper">
     <div ng-repeat="fav in favourite.users" class="col-sm-4 fav-list">
       <div  class="fav-box">

@@ -19,6 +19,9 @@ app.factory('authInterceptor', function($rootScope, $q, $window){
 
 app.factory('timelineHelper', function($http, $q){
   return {
+    getHelper: function(){
+      return $http.get("http://" + location.host + '/api/helper/all')
+    },
     getLike: function(event_id){
       return $http.get("http://" + location.host + '/api/event/' + event_id + "/likes")
     },
@@ -72,6 +75,9 @@ app.factory('timelineHelper', function($http, $q){
     },
     getRandom: function(user_id){
       return $http.get("http://" + location.host + '/api/timeline/recommend/' + user_id + "/random")
+    },
+    browse: function(){
+      return $http.get("http://" + location.host + '/browse')
     }
   }
 });

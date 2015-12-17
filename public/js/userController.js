@@ -1,16 +1,24 @@
-app.controller('UserController', ['$scope', '$http','$window', '$state','timelineHelper','$location', UserController]);
+app.controller('UserController', ['$scope', '$http','$window', '$state','timelineHelper','$location','$stateParams', '$rootScope',UserController]);
 
-function UserController($scope, $http, $window, $state, timelineHelper, $location){
+function UserController($scope, $http, $window, $state, timelineHelper, $location, $stateParams,$rootScope){
   $scope.currentUser = {};
   $scope.user = {username: null, password: null};
   $scope.newUser = {anonymous: false};
   $scope.message = null;
   $scope.error = null;
+
+  $rootScope.$on('$stateChangeStart', function(e,t,tp,fs,fp){
+    if (tp.login){
+      $scope.loginMessage = tp.login
+    }
+  })
+
   $scope.token = $window.sessionStorage.token;
   $scope.edit = {};
   $scope.editUser = {};
   $scope.clearMessage = function(){
     $scope.message  = null;
+    $scope.loginMessage = null;
   }
   getSignup();
   $scope.clearError = function(){
@@ -59,6 +67,7 @@ function UserController($scope, $http, $window, $state, timelineHelper, $locatio
         $scope.error = data.message.toUpperCase();
       })
   };
+
   $scope.postSignup = function(){
     $http
       .post("http://" + location.host + '/api/signup', $scope.newUser)

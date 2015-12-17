@@ -3,7 +3,45 @@ app.controller('ExploreCtrl', ['$scope','$http', '$window', '$state','$statePara
 function ExploreCtrl($scope, $http, $window, $state, $stateParams, $rootScope, $q, timelineHelper){
   $scope.me = $window.sessionStorage.sid;
   $scope.fetchLiked = false;
+  var count = 0;
+  $scope.startJoyRide = false;
+  $scope.start = function(){
+    $scope.startJoyRide = true;
+    count ++;
+  }
+  $scope.config = [{
+                type: "title",
+                heading: "Welcome to SONDER",
+                text: '<div class="row"><div id="title-text" class="col-md-12">This will walk you through the features of SONDER!</span></div></div>'
 
+            },
+    {
+      type: "element",
+      selector: "#step1",
+      heading: "Your Profile",
+      text: "Profile of yours",
+      placement: "right",
+    },
+    {
+      type: "element",
+      selector: "#step2",
+      heading: "Some of the stats",
+      text: "Showing the figures of whom 'me-too'/'liked'/'favourite' your story!",
+      placement: "bottom",
+    },
+    {
+      type: "element",
+      selector: "#step3",
+      heading: "Other stories",
+      text: "You can read some of the details that described what kind of stories the person has",
+      placement: "left",
+    },{
+                type: "title",
+                heading: "Stages and Events",
+                text: "<div class='row popover-row'>There are two major part which made up a 'timeline' for a person in Sonder: Stage and Event. <br/><br/> <strong>Stage</strong> describes a period of time in the person's life and <strong>Event</strong> describes a particular story in that stage.<br/><br/> e.g. The event 'Hated School and tried to ran away from school several times' might be inside a stage named 'Rebelliious Ages'.</div>"
+
+            }
+  ];
   $scope.likedby = function(){
     $scope.fetchLiked = !$scope.fetchLiked;
     $scope.fetchFav = false;

@@ -1,7 +1,8 @@
-<uib-alert type="success" close="clearMessage()" dismiss-on-timeout="1000" ng-if="message">{{message}}</uib-alert>
+<div class="alert-box"><uib-alert type="success" close="clearMessage()" dismiss-on-timeout="1000" ng-if="message">{{message}}</uib-alert></div>
 <div ng-if="!token" class="col-sm-offset-3 col-md-offset-4 col-lg-offset-4 col-sm-6 col-md-4 col-lg-4">
   <h2 class="text-center">Login</h2>
-  <uib-alert type="danger" close="clearError()" dismiss-on-timeout="1000" ng-if="error">{{error}}</uib-alert>
+  <div class="alert-box"><uib-alert type="danger" class="alert-login" close="clearMessage()" dismiss-on-timeout="1000" ng-if="loginMessage">{{loginMessage}}</uib-alert></div>
+  <uib-alert type="danger" close="clearError()" dismiss-on-timeout="2000" ng-if="error">{{error}}</uib-alert>
   <form ng-submit="postLogin()">
     <div class="form-group">
       <input ng-model="user.username" type="text" name="user" placeholder="Username" class="form-control"/>

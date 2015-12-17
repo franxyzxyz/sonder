@@ -1,14 +1,13 @@
-<section ng-controller="ExploreCtrl">
+<section ng-controller="PublicController">
   <div class="explore-wrapper col-xs-12 col-sm-12 col-md-12 col-lg-10">
-    <div class="exp-info col-sm-offset-1 col-sm-3 col-md-offset-1 col-md-3 col-lg-offset-3 col-lg-3" >
-      <div ng-if="token" id="step1">
-        <div class="guide-box" ng-if="!startJoyRide"><a ng-click="start()">PRESS ME FOR A QUICK TOUR <i class="icon ion-arrow-graph-up-right"></i></a></div>
-        <h3><a ui-sref="showOne({timeline_id:user.info.id})" class="name-link">{{user.info.name}}</a></h3>
-        <p><i class="icon ion-star"></i>&nbsp;{{user.info.role}}</p>
-        <p><i class="icon ion-briefcase"></i>&nbsp;{{user.info.industry}}</p>
-        <p><i class="icon ion-ios-location"></i>&nbsp;{{user.info.location}}</p>
+    <div class="exp-info col-sm-offset-1 col-sm-3 col-md-offset-1 col-md-3 col-lg-offset-3 col-lg-3">
+      <div ng-if="!token">
+        <h3>{{randomName}}</h3>
+        <p><i class="icon ion-star"></i>&nbsp;{{randomRole}}</p>
+        <p><i class="icon ion-briefcase"></i>&nbsp;{{randomIndustry}}</p>
+        <p><i class="icon ion-ios-location"></i>&nbsp;{{randomLocation}}</p>
         <div class="utility">
-          <div class="status_box" id="step2">
+          <div class="status_box">
             <div class="col-sm-4" uib-tooltip="Those who said 'ME TOO!' to you" tooltip-class="btn-stat" tooltip-placement="top" ng-click="metooby()">
               <a class="status_digest"><div class="status_head">'ME TOO!' BY</div><div class="status_figure">{{user.metooby.metoo_count}}</div></a>
             </div>
@@ -46,9 +45,9 @@
     <div class="content col-sm-8 col-md-8 col-lg-6">
       <div class="container">
         <h3 class="col-sm-12 col-md-12 col-lg-10 text-center explorer-header">EXPLORE</h3>
-        <div ng-repeat="oneline in exploreMetoo">
-          <div class="userbox col-sm-12 col-md-12 col-lg-10" ng-if="oneline.user.id != me" id="step3">
-            <div class="top-container" >
+        <div ng-repeat="oneline in list">
+          <div class="userbox col-sm-12 col-md-12 col-lg-10" ng-if="oneline.user.id != me">
+            <div class="top-container">
               <div class="userinfo col-sm-12">
                 <div class="userinfo-wrapper">
                   <h3>
@@ -92,5 +91,4 @@
       </div>
     </div>
   </div>
-  <div class="hide" ng-joy-ride="startJoyRide" config="config" on-finish="onFinish()"  on-skip="onFinish()"></div>
 </section>

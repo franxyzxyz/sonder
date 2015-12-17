@@ -1,4 +1,4 @@
-var app = angular.module('sonder',['ui.router','ui.bootstrap','ngResource','ui.gravatar'])
+var app = angular.module('sonder',['ui.router','ui.bootstrap','ngResource','ui.gravatar','ngJoyRide'])
                  .config(authRoute);
 
 function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
@@ -16,7 +16,7 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
       templateUrl: "template/explore.html"
     })
     .state('login', {
-      url: "/login",
+      url: "/login?:login",
       templateUrl: "template/login.html"
     })
     .state('signup', {
@@ -61,12 +61,6 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
     .state('addEvent', {
       url: "/timeline/addEvent?stage",
       templateUrl: "template/timeline/addEvent.html"
-      // controller: function($scope, $stateParams){
-      //   $scope.specific_stage = $stateParams.stage;
-      //   $scope.newEvent.to_stage = {};
-      //   $scope.newEvent.to_stage.id = $stateParams.stage;
-      // }
-      // }
     })
     .state('addStage', {
       url: "/timeline/addStage",
@@ -75,30 +69,30 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
     .state('showOne',{
       url: "/timeline/show/:timeline_id",
       templateUrl: "template/timeline/show.html",
-      // controller : 'ShowController'
+      controller: function($window, $state){
+        if (!$window.sessionStorage.sid){
+          return $state.go('login',{'login':'Oops. You have to login first :D '});
+        }
+      }
     })
     .state('favList',{
       url: "/timeline/my-favourites/:user_id",
       templateUrl: "template/timeline/favourite.html"
-      // controller : 'FavController'
     })
-    // .state('specific',{
-    //   url:  "/timeline/addEvent/specific?stage",
-    //   templateUrl: "template/timeline/addEvent.html",
-    //   controller: function($scope, $stateParams) {
-    //        $scope.specific_stage = $stateParams.stage;
-    //        console.log($scope.specific_stage)
-    //     }
-    // })
-    // .state('timeline',{
-    //   url: "/timeline",
-    //   templateUrl: "template/timeline.html",
-    //   resolve: {
-    //     promiseObj: function($http){
-    //       console.log('in promise')
-    //       return $http({method:'GET', url: 'http://localhost:3000/api'})
-    //     }
-    //   },
-    //   controller: 'TimelineController'
-    // })
+    .state('about',{
+      url: "/about",
+      templateUrl: "template/about.html"
+    })
+    .state('browse',{
+      url: "/browse",
+      templateUrl: "template/browse.html"
+    })
+
+}
+
+function checkAuth($q, $window, $state, $location){
+  console.log($window.sessionStorage.sid)
+  if (!$window.sessionStorage.sid){
+    return $location.path('/login?o=test');
+  }
 }
