@@ -35,14 +35,15 @@
       <div class="stage-attach show-wrapper">
         <div class="stageBox">
           <h3>{{timeline.stage.title}}</h3>
-          <p class="stageRange pull-right">{{timeline.stage.start | date:'MMM yyyy'}} - {{timeline.stage.end | date:'MMM yyyy'}}</p>
-          <p class="description">"{{timeline.stage.description}}"</p>
+          <p class="stageRange ">{{timeline.stage.start | date:'MMM yyyy'}} - {{timeline.stage.end | date:'MMM yyyy'}}</p>
+          <p class="description">{{timeline.stage.description}}</p>
           <div class="eventBox" ng-repeat="event in timeline.events">
             <h4>{{event.event.title}}</h4>
             <p class="eventDate pull-right">{{event.event.date | date:'MMM yyyy'}}</p>
-            <p>{{event.event.description}}</p>
-            <p>{{event.event.event_type}}</p>
-            <p ng-repeat="tag in event.event.tag">{{tag}}</p>
+            <p class="eventType"><i class="fa fa-list desp"></i>&nbsp;{{event.event.event_type}}</p>
+            <p class="eventTag"><i class="icon ion-pricetag"></i>&nbsp;<span ng-repeat="tag in event.event.tag" >{{tag}},&nbsp;</span></p>
+            <hr/>
+            <p class="eventDesp">{{event.event.description}}</p>
             <div class="utility">
               <div class="status_box">
                 <div class="col-sm-6">
@@ -88,8 +89,8 @@
       <div class="recommend-wrapper">
         <div ng-repeat="item in recommend">
           <div class="rec-box center-block col-sm-5 col-md-4 col-lg-2 col-xlg-2" ng-if="item.id != owner">
-            <a ui-sref="showOne({timeline_id:user.user_detail.id})"><img ng-if="!item.anonymous" gravatar-src="item.email" gravatar-size="70" class="gravatar float-img" ><img ng-if="item.anonymous" gravatar-src="" gravatar-size="70" class="gravatar float-img" ></a>
-            <a ui-sref="showOne({timeline_id:user.user_detail.id})"><h3 ng-if="!item.anonymous">{{item.name}}</h3><h3 ng-if="item.anonymous">Anonymous</h3></a>
+            <a ui-sref="showOne({timeline_id:item.id})"><img ng-if="!item.anonymous" gravatar-src="item.email" gravatar-size="70" class="gravatar float-img" ><img ng-if="item.anonymous" gravatar-src="" gravatar-size="70" class="gravatar float-img" ></a>
+            <a ui-sref="showOne({timeline_id:item.id})"><h3 ng-if="!item.anonymous">{{item.name}}</h3><h3 ng-if="item.anonymous">Anonymous</h3></a>
             <div class="col-sm-11 col-mg-11 col-lg-11 rec-stack">
               <p><i class="icon ion-star"></i>&nbsp;{{item.role}}</p>
               <p><i class="icon ion-briefcase"></i>&nbsp;{{item.industry}}</p>

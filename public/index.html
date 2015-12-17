@@ -54,8 +54,8 @@
         <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="login">LOGIN</a></li>
         <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="signup">SIGN UP</a></li>
         <li class="pull-right" ng-if="!token"><a ui-sref-active="active" ui-sref="browse">BROWSE</a></li>
-        <li class="pull-right"><a ui-sref-active="active" ui-sref="about">ABOUT</a></li>
         <li ng-if="token" class="pull-right"><a ng-click="logout()">LOGOUT</a></li>
+        <li class="pull-right"><a ui-sref-active="active" ui-sref="about">ABOUT</a></li>
         <li ng-if="token" class="pull-right"><a ui-sref="profile">SETTINGS</a></li>
         <li ng-if="token" class="pull-right"><p>HI! {{currentUser.name.toUpperCase().split(" ")[0]}}</p></li>
         <li ng-if="token" class="pull-left"><a ui-sref="editTimeline">EDIT</a></li>

@@ -174,7 +174,9 @@ h3.modal-title{
   /*background:rgba(80,120,70,0.2);*/
   /*height:300px;*/
   /*width:400px;*/
-  border:5px solid rgba(80,120,70,0.2);
+  border:1px solid rgba(80,120,70,0.2);
+  box-shadow: 2px 2px #ccc;
+  /*border:5px solid rgba(80,120,70,0.2);*/
   overflow:auto;
   display:inline-block;
   vertical-align: top;
@@ -185,30 +187,43 @@ h3.modal-title{
   font-weight:700;
   margin-bottom:0px;
 }
-p.stageRange, p.eventDate{
+p.stageRange, p.eventDate, p.eventType{
   color:#ccc;
 }
+p.stageRange, p.eventDate{
+  position:relative;
+  right:0;
+}
 p.description{
-  color:#666;
-  font-size:20px;
+  color:#888;
+  font-size:18px;
+}
+p.eventTag{
+  font-size:12px;
+  color:#ccc;
 }
 .eventBox{
   /*margin: 10px 0px 0px 50px;*/
   margin:10px;
   padding:10px;
-  border:5px solid rgba(80,120,70,0.5);
+  border:1px solid rgba(80,120,70,0.1);
   display:inline-block;
+  box-shadow: 1px 1px #ccc;
   width:300px;
   vertical-align: top;
 }
 .eventBox *{
   line-height:100%;
 }
+.eventDesp{
+  font-size:15px;
+  padding:0px 5px;
+}
 .eventBox h4{
   font-weight:700;
 }
 .timeline{
-  padding:30px 20px;
+  padding:30px 50px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space:nowrap;
