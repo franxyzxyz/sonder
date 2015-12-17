@@ -825,11 +825,92 @@ span.seperator{
 .guide-box:hover{
   opacity:0.7;
 }
-.about-wrapper{
+.about-info{
   margin:0 auto;
-  text-align: center;
-  overflow:auto;
+  width:40%;
 }
 .about-header{
   padding:20px;
+}
+.about-info blockquote, blockquote a{
+  color:#ccc;
+}
+blockquote a:hover{
+  color:#444;
+  text-decoration: none;
+}
+.about-info h3 {
+  margin-top:0px;
+  letter-spacing: 1px;
+  text-align: center;
+  line-height: 140%;
+  padding:0px 70px;
+}
+.quote-wrapper{
+  padding-top:30px;
+  overflow:auto;
+  text-align:left;
+}
+.info-mock-left{
+  text-align:left;
+  padding-bottom:10px;
+}
+.info-mock-right{
+  text-align:right;
+  padding-bottom:10px;
+}
+.quote-wrapper .arrow-left{
+  width: 0;
+  height: 0px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right:10px solid #DD524A;
+}
+.about-info h1{
+  font-size:100px;
+  background:#FFEA31;
+  padding:10px;
+
+}
+span.quote-info{
+  background:#DD524A;
+  padding:15px 20px;
+  box-shadow:2px 2px #ccc;
+  color:white;
+  border-radius:2px;
+  font-size:18px;
+  max-width:45%;
+}
+span.info-right{
+  background:#47C7B6;
+}
+.arrow-right{
+  width: 0;
+  height: 0px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left:10px solid #47C7B6;
+  border-right:0px solid transparent;
+}
+.quote-conl p{
+  padding-bottom:20px;
+}
+.quote-conl{
+  background:#FFCC11;
+  font-size:20px;
+  /*color:white;*/
+  font-weight:700;
+  padding:20px 100px;
+  box-shadow:2px 2px #ccc;
+}
+.btn-browse{
+  background:#fff;
+  color:#444;
+  padding:10px 20px;
+  margin-bottom:10px;
+}
+.btn-browse:hover{
+  background:transparent;
+  color:white;
+  text-decoration: none;
 }
