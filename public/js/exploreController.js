@@ -9,45 +9,42 @@ function ExploreCtrl($scope, $http, $window, $state, $stateParams, $rootScope, $
     $scope.startJoyRide = true;
     count ++;
   }
+  $scope.exploreMetoo = [];
   $scope.config = [{
                 type: "title",
                 heading: "Welcome to SONDER",
                 text: '<div class="row"><div id="title-text" class="col-md-12">This will walk you through the features of SONDER!</span></div></div>'
-
-            },
-    {
-      type: "element",
-      selector: "#step1",
-      heading: "Your Profile",
-      text: "Profile of yours",
-      placement: "right",
-    },
-    {
-      type: "element",
-      selector: "#step2",
-      heading: "Some of the stats",
-      text: "Showing the figures of whom 'me-too'/'liked'/'favourite' your story!",
-      placement: "bottom",
-    },
-    {
-      type: "element",
-      selector: "#step3",
-      heading: "Other stories",
-      text: "You can read some of the details that described what kind of stories the person has",
-      placement: "left",
-    },{
+                },
+                {
+                  type: "element",
+                  selector: "#step1",
+                  heading: "Your Profile",
+                  text: "Profile of yours",
+                  placement: "right",
+                },
+                {
+                  type: "element",
+                  selector: "#step2",
+                  heading: "Some of the stats",
+                  text: "Showing the figures of whom 'me-too'/'liked'/'favourite' your story!",
+                  placement: "bottom",
+                },
+                {
+                  type: "element",
+                  selector: "#step3",
+                  heading: "Other stories",
+                  text: "You can read some of the details that described what kind of stories the person has",
+                  placement: "left",
+                },{
                 type: "title",
                 heading: "Stages and Events",
                 text: "<div class='row popover-row'>There are two major part which made up a 'timeline' for a person in Sonder: Stage and Event. <br/><br/> <strong>Stage</strong> describes a period of time in the person's life and <strong>Event</strong> describes a particular story in that stage.<br/><br/> e.g. The event 'Hated School and tried to ran away from school several times' might be inside a stage named 'Rebelliious Ages'.</div>"
-
-            }
-  ];
+                }];
   $scope.likedby = function(){
     $scope.fetchLiked = !$scope.fetchLiked;
     $scope.fetchFav = false;
     $scope.fetchMetoo = false;
   }
-
   $scope.favby = function(){
     $scope.fetchFav = !$scope.fetchFav;
     $scope.fetchLiked = false;
@@ -59,51 +56,72 @@ function ExploreCtrl($scope, $http, $window, $state, $stateParams, $rootScope, $
     $scope.fetchFav = false;
   }
 
-  timelineHelper.getRecommend($window.sessionStorage.sid).then(function(res){
-    $scope.recommend = res.data.list;
-    res.data.list.forEach(function(data){
-      timelineHelper.getRecommend(data.id).then(function(sec_layer){
-        $scope.recommend = _.chain($scope.recommend)
-                    .concat(sec_layer.data.list)
-                    .uniq(function(i,k,id){
-                      return i.id
-                     })
-                    .each(function(elem){
-                      delete elem.username;
-                      delete elem.password;
-                    }).value();
-      })
-    })
+  // timelineHelper.getRecommend($window.sessionStorage.sid).then(function(res){
+  //   $scope.recommend = res.data.list;
+  //   res.data.list.forEach(function(data){
+  //     timelineHelper.getRecommend(data.id).then(function(sec_layer){
+  //       $scope.recommend = _.chain($scope.recommend)
+  //                   .concat(sec_layer.data.list)
+  //                   .uniq(function(i,k,id){
+  //                     return i.id
+  //                    })
+  //                   .each(function(elem){
+  //                     delete elem.username;
+  //                     delete elem.password;
+  //                   }).value();
+  //     })
+  //   })
+  // });
 
-  });
+  timelineHelper.curatedFav($scope.me).then(function(res){
+    updateExplore(res.data.list)
+  })
 
-  timelineHelper.getUser($window.sessionStorage.sid).then(function(res){
+  timelineHelper.curatedMetoo($scope.me).then(function(res){
+    updateExplore(res.data.list)
+  })
+
+  timelineHelper.curatedLike($scope.me).then(function(res){
+    updateExplore(res.data.list)
+  })
+
+  timelineHelper.getUser($scope.me).then(function(res){
     $scope.user.info = res.data.user
   })
 
-  timelineHelper.getExplore().then(function(res){
-    $scope.exploreMetoo = res.data.list;
-    $scope.exploreMetoo = _.shuffle($scope.exploreMetoo)
-    $scope.exploreMetoo = _.chain($scope.exploreMetoo)
-                           .uniq(function(item, key, id){
-                            return item.user.id
-                           }).value();
-    timelineHelper.getRandom($window.sessionStorage.sid).then(function(data){
-      var existing = _.chain($scope.exploreMetoo)
-                      .pluck('user')
-                      .pluck('id').value();
-      _.each(data.data.list, function(elem){
-        if (existing.indexOf(elem.user.id) == -1 && elem.user.id !== $scope.me){
-          if ($scope.exploreMetoo.length <= 10){
-            $scope.exploreMetoo.unshift(elem)
-          }else{
-            $scope.exploreMetoo.push(elem)
-          }
-        }
-      });
-      // $scope.exploreMetoo = _.shuffle($scope.exploreMetoo);
-    })
+  timelineHelper.getRandom($scope.me).then(function(res){
+    updateExplore(res.data.list)
   })
+
+  function updateExplore(add_list){
+    $scope.exploreMetoo = _.chain($scope.exploreMetoo.concat(add_list)).uniq(function(item, key, id){
+      return item.user.id
+    }).shuffle().value();
+  }
+
+  // timelineHelper.getExplore().then(function(res){
+  //   $scope.exploreMetoo = res.data.list;
+  //   $scope.exploreMetoo = _.shuffle($scope.exploreMetoo)
+  //   $scope.exploreMetoo = _.chain($scope.exploreMetoo)
+  //                          .uniq(function(item, key, id){
+  //                           return item.user.id
+  //                          }).value();
+  //   timelineHelper.getRandom($window.sessionStorage.sid).then(function(data){
+  //     var existing = _.chain($scope.exploreMetoo)
+  //                     .pluck('user')
+  //                     .pluck('id').value();
+  //     _.each(data.data.list, function(elem){
+  //       if (existing.indexOf(elem.user.id) == -1 && elem.user.id !== $scope.me){
+  //         if ($scope.exploreMetoo.length <= 10){
+  //           $scope.exploreMetoo.unshift(elem)
+  //         }else{
+  //           $scope.exploreMetoo.push(elem)
+  //         }
+  //       }
+  //     });
+  //     // $scope.exploreMetoo = _.shuffle($scope.exploreMetoo);
+  //   })
+  // })
 
   timelineHelper.getFav($window.sessionStorage.sid).then(function(res){
     $scope.user.fav = res.data

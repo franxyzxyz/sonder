@@ -1,6 +1,6 @@
-app.controller('ShowController', ['$scope','$http', '$window', '$state','$stateParams','$rootScope','$q','timelineHelper', ShowController]);
+app.controller('ShowController', ['$scope','$http', '$window', '$state','$stateParams','$rootScope','$q','timelineHelper','$anchorScroll','$location', ShowController]);
 
-function ShowController($scope, $http, $window, $state, $stateParams, $rootScope, $q, timelineHelper){
+function ShowController($scope, $http, $window, $state, $stateParams, $rootScope, $q, timelineHelper, $anchorScroll, $location){
   $scope.fav = {};
   $scope.error = null;
   fetchUser($stateParams.timeline_id);
@@ -20,6 +20,16 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
       })
     }
   });
+
+  $scope.scrollTo = function(stage_id){
+    $anchorScroll.yOffset = 500;
+    var newStage = 'stage-' + stage_id;
+    if($location.hash()!==newStage){
+      $location.hash('stage-' + stage_id)
+    }else{
+      $anchorScroll();
+    }
+  }
 
   $scope.showLikeList = function(event_id){
     $scope.timelines.forEach(function(timeline, idx){
@@ -166,7 +176,7 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
   }
 
   function fetchEvents(stage_id){
-    $http.get("http://" + location.host + '/api/timeline/' + $stateParams.timeline_id + "/stage/" + stage_id + "/events")
+    timelineHelper.getEvents($stateParams.timeline_id, stage_id)
          .then(function(res){
           _.each($scope.timelines, function(item, id){
             if (_.isEqual(item.stage.id, stage_id)){
@@ -189,7 +199,8 @@ function ShowController($scope, $http, $window, $state, $stateParams, $rootScope
                     if (ifMetoo){ $scope.timelines[id].events[idx - 1].metoo.byme = true };
                   }, function(error){
                     $scope.error = error.data.error
-                  })
+                  });
+
                 },function(error){
                     $scope.error = error.data.error
                   });

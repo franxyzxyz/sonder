@@ -1,0 +1,77 @@
+<div ng-controller="SearchController">
+  <div class="container">
+    <div class="search-title">
+      <h3>SEARCH</h3>
+      <form ng-submit="goSearch()" class="col-xs-offset-2 col-xs-8 col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4">
+        <div class="form-group ">
+          <input type="text" placeholder="Search Sonder (keywords eg. school)" ng-model="search_string" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default col-xs-12 col-sm-12 col-md-offset-4 col-md-4">SEARCH</button>
+        </div>
+      </form>
+    </div>
+    <div class="container">
+      <div class="search-wrapper col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 col-lg-offset-3 col-lg-6">
+        <div class="search-filter" ng-if="search_key_list">
+          <h4 class="text-center">{{search_key_list.length}} matched result</h4>
+          <div class="search-select">
+            <table class="search-type">
+              <tr ng-if="search_key_list.length > 0">
+                <td class="col-sm-2 text-center"><b>TYPE</b></td>
+                <td class="col-sm-10">
+                  <span class="basic-node" ng-class="{'node-event':node_type=='event','node-stage':node_type=='stage','node-unclicked':!clicked[node_type]}" ng-repeat="(node_type, count) in filter_list.type"><a ng-click="filtering(node_type)">{{node_type | uppercase}}&nbsp;( {{count}} )</a></span>
+                </td>
+              </tr>
+              <tr ng-if="clicked.event && filter_list.event">
+                <td class="text-center"><b>EVENT</b><br/><a class="action-all" ng-click="filter_event('all')">SELECT ALL</a><br/><a class="action-all" ng-click="filter_event()" ng-class="{'all-unclicked':clicked.all}">CLEAR ALL</a></td>
+                <td><span class="normal-event" ng-class="{'event-type-unclicked':!clicked[type]}" ng-repeat="(type, count) in filter_list.event"><a ng-click="filter_event(type)">{{type | uppercase }}&nbsp;( {{count}} )</a></span></td>
+              </tr>
+              <tr ng-if="filter_list.stage">
+                <td>STAGE:</td>
+                <td>{{filter_list.stage}}</td>
+              </tr>
+            </table>
+
+        </div>
+        <div ng-repeat="result in search_key_list | filter:filter_array | filter:filter_event_list" class="search-box">
+          <div class="search-detail col-xs-12 col-sm-12 col-md-12">
+            <div class="search-event" ng-if="result.type.indexOf('event') != -1">
+              <div class="node_type node-event">EVENT</div>
+              <h4><a ui-sref="showOne({timeline_id:result.user.id})" class="name-link">{{result.node.title}}</a></h4>
+              <p class="eventDate pull-right">{{result.node.date | date:'MMM yyyy'}}</p>
+              <p class="eventType"><i class="fa fa-list desp"></i>&nbsp;{{result.node.event_type}}</p>
+              <p class="eventTag"><i class="icon ion-pricetag"></i>&nbsp;<span ng-repeat="tag in result.node.tag" >{{tag}},&nbsp;</span></p>
+              <hr/>
+              <p class="eventDesp">{{result.node.description}}</p>
+            </div>
+            <div class="search-stage" ng-if="result.type.indexOf('stage') != -1">
+              <div class="node_type node-stage">STAGE</div>
+              <h4><a ui-sref="showOne({timeline_id:result.user.id})" class="name-link">{{result.node.title}}</a></h4>
+              <p class="eventDate pull-right">{{result.node.start | date:'MMM yyyy'}} - {{result.node.end | date:'MMM yyyy'}}</p>
+              <hr/>
+              <p class="eventDesp">{{result.node.description}}</p>
+            </div>
+            <hr/>
+            <div class="search-user-detail">
+              <div class="col-sm-3">
+                <h4><a ui-sref="showOne({timeline_id:result.user.id})" class="name-link">{{result.user.name}}</a></h4>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-star"></i>&nbsp;{{result.user.role}}</p>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-briefcase"></i>&nbsp;{{result.user.industry}}</p>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-ios-location"></i>&nbsp;{{result.user.location}}</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

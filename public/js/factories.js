@@ -19,6 +19,9 @@ app.factory('authInterceptor', function($rootScope, $q, $window){
 
 app.factory('timelineHelper', function($http, $q){
   return {
+    updateEvent: function(event_id, event_body){
+      return $http.put("http://" + location.host + '/api/timeline/event/' + event_id, event_body)
+    },
     getHelper: function(){
       return $http.get("http://" + location.host + '/api/helper/all')
     },
@@ -78,6 +81,28 @@ app.factory('timelineHelper', function($http, $q){
     },
     browse: function(){
       return $http.get("http://" + location.host + '/browse')
+    },
+    curatedMetoo: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/explore/' + user_id + "/metoo")
+    },
+    curatedFav: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/explore/' + user_id + "/fav")
+    },
+    curatedLike: function(user_id){
+      return $http.get("http://" + location.host + '/api/timeline/explore/' + user_id + "/like")
+    },
+    searchBy: function(type, sort_type){
+      return $http.get("http://" + location.host + '/api/timeline/search_by/' + type + '/' + sort_type)
+    },
+    searchKey: function(query_string){
+      return $http.get("http://" + location.host + '/api/timeline/search/keywords?q=' + query_string)
+    },
+    getEvents: function(timeline_id, stage_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + timeline_id + "/stage/" + stage_id + "/events")
+    },
+    getStage: function(timeline_id){
+      return $http.get("http://" + location.host + '/api/timeline/' + timeline_id + "/stages")
     }
+
   }
 });

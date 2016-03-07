@@ -49,14 +49,15 @@
         <div ng-repeat="oneline in exploreMetoo">
           <div class="userbox col-sm-12 col-md-12 col-lg-10" ng-if="oneline.user.id != me" id="step3">
             <div class="top-container" >
-              <div class="userinfo col-sm-12">
+              <div class="userinfo col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="userinfo-wrapper">
                   <h3>
                     <a ui-sref="showOne({timeline_id:oneline.user.id})"><span ng-if="!oneline.user.anonymous">{{oneline.user.name}}</span><span ng-if="oneline.user.anonymous">Anonymous</span></a>
                   </h3>
                   <p ng-if="oneline.random" class="fetch_type">EXPLORE</p>
-                  <p ng-if="oneline.metoo" class="fetch_type me-too">BASED ON ME-TOO</p>
-                  <p ng-if="oneline.fav" class="fetch_type fav">BASED ON FAVOURITE</p>
+                  <p ng-if="oneline.method == 'metoo'" class="fetch_type me-too">BASED ON ME-TOO</p>
+                  <p ng-if="oneline.method == 'fav'" class="fetch_type fav">BASED ON FAVOURITE</p>
+                  <p ng-if="oneline.method == 'like'" class="fetch_type like">BASED ON LIKE</p>
 
                   <div class="userinfo-list-wrapper">
                     <div class="mock-up stack-up" ng-if="oneline.user.role"><div class="arrow-top"></div><span class="explore-info">{{oneline.user.role}}</span></div>

@@ -17,7 +17,7 @@ function getTimelines(req, res){
                 res.status(401).json({success:false, error:error})
               })
     }
-    return Q.nfcall(genArray,result, 'metoo')
+    return Q.nfcall(genArray, result, 'metoo')
             .then(function(data){
               return Q.nfcall(detailFav, req.user.id)
                       .then(function(data_result){
@@ -38,6 +38,158 @@ function getTimelines(req, res){
               res.status(401).json({success: false, error: error})
              })
    })
+}
+
+function getCurated_metoo(req,res){
+  Q.nfcall(findMetoo, req.params.user_id, req.params.user_id)
+   .then(function(metoo_result){
+    if(_.isEmpty(metoo_result)) return res.status(401).json({success:false, list:[]});
+    var metoo_input = _.chain(metoo_result)
+                       .filter(function(elem){
+                        return !!elem
+                       })
+                       .each(function(metoo){
+                         metoo.method = 'metoo'
+                       })
+                       .value();
+    return Q.nfcall(genResult, metoo_input)
+            .then(function(curate_list){
+              res.status(200).json({success:true, list: curate_list})
+            })
+   });
+}
+
+function getCurated_fav(req, res){
+  Q.nfcall(favSearch, req.params.user_id)
+   .then(function(fav_res){
+    if(_.isEmpty(fav_res)) return res.status(401).json({success:false, list:[]});
+    var fav_input = _.each(fav_res, function(fav){
+     fav.method = 'fav' });
+    return Q.nfcall(genResult, fav_input)
+            .then(function(curate_list){
+              res.status(200).json({success:true, list: curate_list})
+            });
+    });
+}
+
+function getCurated_like(req, res){
+  Q.nfcall(likeSearch, req.params.user_id)
+   .then(function(like_result){
+    if(_.isEmpty(like_result)) return res.status(401).json({success:false, list:[]});
+     var like_input = _.chain(like_result)
+                       .filter(function(elem){
+                        return !!elem
+                       })
+                       .each(function(like){
+                         if (like){ like.method = 'like' }
+                       })
+                       .value();
+    return Q.nfcall(genResult, like_input)
+            .then(function(curate_list){
+              res.status(200).json({success:true, list: curate_list})
+            })
+   })
+}
+
+function genResult(input, callback){
+  var del = [];
+  var input = _.chain(input)
+               .uniq(function(item, key, id){
+                return item.id
+               })
+               .each(function(elem){
+                delete elem.password
+               }).value();
+  // var input = _.uniq(input, function(item, key, id){return item.id});
+  return Q.nfcall(fetchUsers, input)
+          .then(function(value){
+            _.each(value,function(result){
+              del.push(result)
+            });
+            return callback(null, del)
+          })
+}
+
+function searchBy(req, res){
+  Q.nfcall(searchQuery, req.params.type, req.params.sort_type)
+   .then(function(result){
+    res.status(200).json({success: true, list: result})
+   })
+}
+
+function searchKey(req, res){
+  Q.nfcall(keyword_search, req.query.q)
+   .then(function(result){
+    if (_.isEmpty(result)) return res.status(200).json({success:true, list:result});
+
+     return Q.nfcall(getOrigin, result)
+             .then(function(list){
+              res.status(200).json({success: true, list: list})
+
+             })
+   })
+   .catch(function(err){
+    console.log(err)
+   })
+}
+
+function getOrigin(list, callback){
+  _.each(list, function(data, idx){
+    return Q.nfcall(nodeOrigin, data.type[0], data.node.id)
+            .then(function(user){
+              list[idx].user = user[0];
+              if (_.every(list, function(elem){
+                return !!elem.user
+              })){
+                callback(null, list)
+              }
+            })
+  })
+}
+
+function nodeOrigin(node_type, node_id, callback){
+  var search = "START n = node({id})";
+  switch(node_type){
+    case 'event':
+      search += "MATCH n <-[:has_event]- () <-[:has_stage]- (target)"
+      break;
+    case 'stage':
+      search += "MATCH n <-[:has_stage]- (target)"
+      break;
+  }
+  search += "RETURN target";
+  db.query(search, {id: node_id}, function(err, result){
+    result = _.each(result,function(elem){
+      delete elem.password
+    });
+    return callback(null, result)
+  })
+}
+
+function keyword_search(query_string, callback){
+  var search_cypher = "MATCH (n)"
+                    + "WHERE n.title =~ {string} OR n.description =~ {string}"
+                    + "RETURN n as node, labels(n) as type";
+  db.query(search_cypher, {string: ".*(?i)" + query_string + ".*"}, function(err, result){
+    return callback(null, result)
+  })
+}
+
+function searchQuery(type, sort_type, callback){
+  var search_cypher = "MATCH (e) ";
+  switch(type){
+    case 'event':
+      search_cypher += "MATCH (e) <-[:has_event]- () <-[:has_stage]- (user)"
+      break;
+  }
+  search_cypher += "WHERE {type} in labels(e) AND e.event_type = {sort_type}"
+                 + "RETURN e, user" ;
+  db.query(search_cypher, {type: type, sort_type: sort_type}, function(err, result){
+    result = _.each(result,function(elem){
+      delete elem.user.password
+    });
+    return callback(null, result)
+  })
 }
 
 function getFavRec(req, res){
@@ -92,6 +244,9 @@ function fetchUsers(input, callback){
     input.forEach(function(user, idx){
       return Q.nfcall(fetchUser, user.id)
               .then(function(res){
+                if (user.method){
+                  res.method = user.method;
+                }
                 deliverables.push(res)
                 if (deliverables.length == input.length){
                   return callback(null, deliverables)
@@ -157,11 +312,12 @@ function randomFetch(user_id, callback){
 function findMetoo(user_id, origin_id, callback){
   var metoo_cypher = "START user = node({id})"
              + "MATCH (user) -[r:me_too]-> (event)"
-             + "OPTIONAL MATCH (event) <-[:has_event]- () <-- (origin)"
+             // + "OPTIONAL MATCH (event) <-[:has_event]- () <-- (origin)"
              + "OPTIONAL MATCH (event) <-[:me_too]- (target)"
              + "WHERE id(target) <> {origin_id}"
-             + "RETURN origin, r, target" ;
+             + "RETURN target" ;
   db.query(metoo_cypher, {id: parseInt(user_id),origin_id:parseInt(origin_id)}, function(err, result){
+    result = _.chain(result).filter(function(elem){ return !!elem}).value()
     return callback(null, result)
   })
 }
@@ -174,19 +330,36 @@ function genArray(result, method, callback){
                       .value();
   var target_list  = _.chain(result)
                       .pluck('target')
+                      .filter(function(elem){
+                        return !!elem  == true
+                      })
                       .pluck('id')
                       .uniq()
                       .value();
-  var iterate = _.difference( target_list,origin_list);
+  console.log(origin_list, target_list)
+  var iterate = _.difference( target_list ,origin_list);
+  // console.log(iterate)
   var result_list = []
+  console.log(result)
   iterate.forEach(function(num){
+    //  _.each(result, function(elem){
+    //   if (elem.target){
+    //     result_list.push(elem.target)
+    //   }
+    // })
     result_list.push(_.find(result, function(elem){
-      return elem.target.id == num
+      if (elem.target.id)
+      return !!elem.target.id && elem.target.id == num
     }))
   })
-  var input = _.chain(result_list).pluck('target').uniq(function(item, key, id){
-    return item.id;
-  }).value();
+  var input = result_list;
+  // var input = _.chain(result_list).pluck('target').uniq(function(item, key, id){
+    // return item.id;
+  // }).value();
+  // console.log(input)
+
+  if (input.length == 0) return callback(null, []);
+
   Q.nfcall(fetchUsers, input)
    .then(function(resp){
     resp = _.each(resp, function(elem){
@@ -198,13 +371,13 @@ function genArray(result, method, callback){
       return callback(error);
    })
 }
+
 function getRandom(req, res){
   if(!req.params.user_id){
     var user_id = Math.random()*1000;
   }else{
     var user_id = req.params.user_id;
   }
-  console.log(user_id)
    Q.nfcall(randomFetch, user_id)
     .then(function(value){
       return Q.nfcall(fetchUsers, value)
@@ -261,17 +434,37 @@ function furFav(user_id, callback){
   })
 }
 
-function spreadMetoo(array_user, callback){
+function favSearch(user_id, callback){
+  var fav_cypher = "START user = node({id})"
+             + "MATCH (user) -[:favourites*1..2]- (target)"
+             + "WHERE id(target) <> {id}"
+             + "RETURN target" ;
+  db.query(fav_cypher, {id: parseInt(user_id)}, function(err, result){
+    if (err){console.log(err)}
+    return callback(null, result)
+  })
 }
 
-function getTimeline(req, res){
-  console.log('in timeline')
+function likeSearch(user_id, callback){
+  var like_cypher = "START user = node({id})"
+             + "MATCH (user) -[:likes]-> (event)"
+             + "OPTIONAL MATCH (event) <-[:likes]- (origin) -[:likes]-> () <-[:has_event]- () <-[:has_stage]- (target)"
+             + "WHERE id(target) <> {id} AND id(target) <> id(origin)"
+             + "RETURN DISTINCT target" ;
+  db.query(like_cypher, {id: parseInt(user_id)}, function(err, result){
+    if (err){console.log(err)}
+    return callback(null, result)
+  })
 }
 
 module.exports = {
   getTimelines : getTimelines,
-  getTimeline  : getTimeline,
   getSuggestions : getSuggestions,
   getFavRec     : getFavRec,
-  getRandom   : getRandom
+  getRandom   : getRandom,
+  getCurated_metoo  : getCurated_metoo,
+  getCurated_fav : getCurated_fav,
+  getCurated_like : getCurated_like,
+  searchBy : searchBy,
+  searchKey : searchKey
 }

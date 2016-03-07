@@ -1,0 +1,38 @@
+<div ng-controller="SearchController">
+  <div class="container">
+    <div class="search-title">
+      <h3>SEARCH RESULT</h3>
+      <hr/>
+      <h3>{{search_title.type}} : {{search_title.sort_type}}</h3>
+      <h4 class="text-center">{{result.count}} matched result</h4>
+    </div>
+    <div class="container">
+      <div class="search-wrapper col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 col-lg-offset-3 col-lg-6">
+        <div ng-repeat="result in result.list" class="search-box ">
+          <div class="search-detail col-xs-12 col-sm-12 col-md-12">
+            <h4><a ui-sref="showOne({timeline_id:result.user.id})" class="name-link">{{result.e.title}}</a></h4>
+            <p class="eventDate pull-right">{{result.e.date | date:'MMM yyyy'}}</p>
+            <p class="eventType"><i class="fa fa-list desp"></i>&nbsp;{{result.e.event_type}}</p>
+            <p class="eventTag"><i class="icon ion-pricetag"></i>&nbsp;<span ng-repeat="tag in result.e.tag" >{{tag}},&nbsp;</span></p>
+            <hr/>
+            <p class="eventDesp">{{result.e.description}}</p>
+            <hr/>
+            <div class="search-user-detail">
+              <div class="col-sm-3">
+                <h4><a ui-sref="showOne({timeline_id:result.user.id})" class="name-link">{{result.user.name}}</a></h4>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-star"></i>&nbsp;{{result.user.role}}</p>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-briefcase"></i>&nbsp;{{result.user.industry}}</p>
+              </div>
+              <div class="col-sm-3">
+                <p><i class="icon ion-ios-location"></i>&nbsp;{{result.user.location}}</p>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

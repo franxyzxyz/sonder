@@ -2,19 +2,17 @@
   <h2 class="text-center">YOUR FAVOURITES</h2>
   <div class="top-notice text-center" ng-if="!favourite.users.length"><div class="arrow-top"></div><span class="empty"><i class="icon ion-alert-circled"></i><br/>Not yet..not yet..</span><a class="btn-go" ui-sref="landing">GET INSPIRATION</a></div>
   <div class="fav-wrapper">
-    <div ng-repeat="fav in favourite.users" class="col-sm-4 fav-list">
-      <div  class="fav-box">
-        <a ui-sref="showOne({timeline_id:fav.id})" class="name">
-          <span ng-if="!fav.anonymous">{{fav.name}}</span>
-          <span ng-if="fav.anonymous">Anonymous</span>
-        </a>
-        <div class="message">{{fav.location}}</div>
-        <div class="message">{{fav.industry}}</div>
-        <p ng-if="fav.anonymous">{{fav.email}}</p>
-        <p ng-if="fav.role">{{fav.role}}</p>
-        <p>
-          <img ng-if="!fav.anonymous" gravatar-src="fav.email" gravatar-size="70" class="gravatar"><img ng-if="fav.anonymous" gravatar-src="" gravatar-size="70" class="gravatar">
-        </p>
+    <div class="userinfo col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="userinfo-wrapper fav-user col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4 col-lg-offset-4 col-lg-4" ng-repeat="fav in favourite.users">
+        <h3>
+          <img ng-if="!fav.anonymous" gravatar-src="fav.email" gravatar-size="40" class="gravatar cus-grav"><img ng-if="fav.anonymous" gravatar-src="" gravatar-size="70" class="gravatar">
+          <a ui-sref="showOne({timeline_id:fav.id})"><span ng-if="!fav.anonymous">{{fav.name}}</span><span ng-if="fav.anonymous">Anonymous</span></a>
+        </h3>
+        <div class="userinfo-list-wrapper">
+          <div class="mock-up stack-up" ng-if="fav.role"><div class="arrow-top"></div><span class="explore-info">{{fav.role}}</span></div>
+          <div class="mock-up stack-up"><div class="arrow-top"></div><span class="explore-info scn-info">{{fav.location}}</span></div>
+          <div class="mock-up stack-up"><div class="arrow-top"></div><span class="explore-info scn-info">{{fav.industry}}</span></div>
+        </div>
       </div>
     </div>
   </div>

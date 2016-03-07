@@ -1,4 +1,4 @@
-var app = angular.module('sonder',['ui.router','ui.bootstrap','ngResource','ui.gravatar','ngJoyRide'])
+var app = angular.module('sonder',['ui.router','ui.bootstrap','ngResource','ui.gravatar','ngJoyRide','angular-loading-bar','duScroll'])
                  .config(authRoute);
 
 function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
@@ -87,7 +87,18 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
       url: "/browse",
       templateUrl: "template/browse.html"
     })
-
+    .state('searchBy',{
+      url: "/search/:type/:sort_type",
+      templateUrl: "template/searchResult.html"
+    })
+    .state('searchKey',{
+      url: "/search",
+      templateUrl: "template/search.html"
+    })
+    .state('graph',{
+      url: "/graph/:timeline_id",
+      templateUrl: "template/timeline/graph.html"
+    })
 }
 
 function checkAuth($q, $window, $state, $location){

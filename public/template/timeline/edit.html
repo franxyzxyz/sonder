@@ -1,6 +1,7 @@
 <h2 class="text-center">EDIT</h2>
 <section ng-controller="TimelineController">
-  <uib-alert type="success" close="clearMessage()" dismiss-on-timeout="1000" ng-if="message">{{message}}</uib-alert>
+  <uib-alert type="success" close="clearMessage()" dismiss-on-timeout="2000" ng-if="message">{{message}}</uib-alert>
+  <uib-alert type="danger" close="clearError()" dismiss-on-timeout="2000" ng-if="error">{{error}}</uib-alert>
 <div class="box-container col-sm-12">
   <p><a class="question" ng-click="fetchGuide = !fetchGuide; clickInit = !clickInit" ng-class="{'smaller-icon': fetchGuide}"><i class="icon ion-ios-help-outline"></i></a></p>
   <!-- <div ng-if="fetchGuide" class="addbox">Import basic from Facebook</div> -->
@@ -12,9 +13,9 @@
   </p>
   <span ng-controller="PopoverController"><a uib-popover-template="addEvent.templateUrl" popover-title="{{addEvent.title}}" popover-placement="bottom" ng-if="stages.length !== 0"><div ng-if="fetchGuide" class="addbox" >ADD AN EVENT</div></a></span>
 
-  <span ng-controller="PopoverController"><a uib-popover-template="addStage.templateUrl" popover-title="{{addStage.title}}" popover-placement="bottom" ><div ng-if="fetchGuide" class="addbox" ><span ng-if="stages.length == 0">Firstly<br/></span>ADD A STAGE</div></a></span></section>
+  <span ng-controller="PopoverController"><a uib-popover-template="addStage.templateUrl" popover-title="{{addStage.title}}" popover-placement="bottom" ><div ng-if="fetchGuide" class="addbox" ><span ng-if="stages.length == 0">Firstly<br/></span>ADD A STAGE</div></a></span>
 </div>
-<section ng-controller="TimelineController">
+<!-- <section ng-controller="TimelineController"> -->
   <div class="timeline">
     <div class="stage-wrapper" ng-repeat="timeline in timelines">
       <div class="stage-attach">
@@ -28,13 +29,43 @@
           <h3>{{timeline.stage.title}}</h3>
           <p class="stageRange pull-right">{{timeline.stage.start | date:'MMM yyyy'}} - {{timeline.stage.end | date:'MMM yyyy'}}</p>
           <p class="description">"{{timeline.stage.description}}"</p>
-          <div class="eventBox" ng-repeat="event in timeline.event">
-            <span class="pull-right"><a ng-message="Confirm to delete the event?" ng-confirm-click="deleteEvent(event.id)"><i class="icon ion-close"></i></a></span>
-            <h4>{{event.title}}</h4>
-            <p class="eventDate pull-right">{{event.date | date:'MMM yyyy'}}</p>
-            <p>{{event.description}}</p>
-            <p>{{event.event_type}}</p>
-            <p ng-repeat="tag in event.tag">{{tag}}</p>
+          <div class="eventBox" ng-repeat="event in timeline.event" ng-class="{'event-highlighted':event_hover[event.id] || is_edit_event[event.id]}">
+            <span class="pull-right text-right"><a ng-click="editEvent(event)" ng-mouseenter="event_hover[event.id]=true" ng-mouseleave="event_hover[event.id]=false"><i class="icon ion-edit" ng-if="!is_edit_event[event.id]"></i><i class="icon ion-close" ng-if="is_edit_event[event.id]"></i></a></span>
+            <div ng-if="is_edit_event[event.id]">
+              <h4 class="update-header text-center col-xs-9 col-sm-6">EDIT EVENT</h4>
+              <form ng-submit="updateEvent(event.id)">
+                <div class="form-group">
+                  <input type="text" class="form-control edit_title" ng-model="edit_event[event.id].title">
+                </div>
+                <div class="form-group">
+                  <input type="month" class="form-control" ng-model="edit_event[event.id].date" min="{{timeline.stage.start | date:'yyyy-MM'}}" max="{{timeline.stage.end | date:'yyyy-MM'}}" >
+                </div>
+                <div class="form-group">
+                  <select class="form-control" ng-model="edit_event[event.id].event_type">
+                    <option ng-repeat="category in categoryList" value={{category}} ng-selected="category == edit_event[event.id].event_type">{{category}}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <textarea rows="8" ng-model="edit_event[event.id].description" class="form-control edit_desp">{{edit_event[event.id].description}}</textarea>
+                </div>
+                <div class="form-group">
+                  <label class="eventTag"><i class="icon ion-pricetag"></i>&nbsp;TAG</label>
+                  <input ng-model="edit_event[event.id].tag" type="text" placeholder="Tag it eg.#IReallyHatedSchool" class="form-control"/>
+                </div>
+                <button type="submit" class="col-sm-6 btn-update save">SAVE UPDATES</button>
+              </form>
+                <button class="col-sm-5 btn-update cancel" ng-click="editEvent(event)">CANCEL</button>
+                <p class="text-center">
+                  <a ng-message="Confirm to delete the event?" ng-confirm-click="deleteEvent(event.id)">REMOVE THIS EVENT</a>
+                </p>
+            </div>
+            <div ng-if="!is_edit_event[event.id]">
+              <h4>{{event.title}}</h4>
+              <p class="eventDate pull-right">{{event.date | date:'MMM yyyy'}}</p>
+              <p class="eventType"><i class="fa fa-list desp"></i>&nbsp;{{event.event_type}}</p>
+              <p class="eventTag"><i class="icon ion-pricetag"></i>&nbsp;<span ng-repeat="tag in event.tag">{{tag}}</span></p>
+              <p>{{event.description}}</p>
+            </div>
           </div>
         </div>
         <div class="stage-attachment">

@@ -24,6 +24,8 @@ function dateRange(params, callback){
 }
 
 function multipleFields(newBody, standard, limitation, next, callback){
+  console.log(Object.keys(newBody))
+  console.log(Object.keys(standard))
   if (Object.keys(newBody).length !== Object.keys(standard).length) throw 'Oops. Fields missing!';
   for (prop in newBody){
     if (Object.keys(standard).indexOf(prop) == -1) throw 'Oops. Fields missing!';

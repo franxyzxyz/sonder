@@ -1,7 +1,7 @@
 var Event       = require('../models/Event')
 var Stage       = require('../models/Stage')
 var Q           = require("q");
-var validation  = require('../helpers/validation')
+var validation  = require('../helpers/validation');
 var _           = require('underscore');
 
 function getStageEvents(req, res){
@@ -13,7 +13,7 @@ function getStageEvents(req, res){
     cypher += "RETURN event";
   }
   db.query(cypher, {id: parseInt(req.params.user_id), stage_id: parseInt(req.params.stage_id)}, function(err, result){
-    var result = _(result).sortBy(function(event){
+    var result = _.sortBy(result, function(event){
       return event.date
     })
     if (err) return res.status(401).json({error: err.message})
@@ -80,6 +80,7 @@ function updateEvent(req, res){
       })
      })
      .catch(function(error){
+      console.log(error)
       res.status(401).json({success: false, message: error});
      })
   })

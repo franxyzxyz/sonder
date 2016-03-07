@@ -1,6 +1,6 @@
-app.controller('TimelineController', ['$scope','$http', '$window', '$state','$stateParams', '$rootScope', TimelineController]);
+app.controller('TimelineController', ['$scope','$http', '$window', '$state','$stateParams', '$rootScope','timelineHelper', TimelineController]);
 
-function TimelineController($scope, $http, $window, $state, $stateParams, $rootScope){
+function TimelineController($scope, $http, $window, $state, $stateParams, $rootScope, timelineHelper){
   init_form();
   $scope.newEvent = {tag: "", description: "", to_stage:{}};
   $scope.newStage = {};
@@ -55,6 +55,39 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
       })
   }
 
+  $scope.edit_event = {};
+  $scope.is_edit_event = {};
+
+  $scope.editEvent = function(event){
+    $scope.is_edit_event[event.id] = !$scope.is_edit_event[event.id];
+    if($scope.is_edit_event[event.id]){
+      $scope.edit_event[event.id] = _.create($scope.edit_event, event);
+      $scope.edit_event[event.id].date = new Date($scope.edit_event[event.id].date);
+    }
+  }
+
+  $scope.updateEvent = function(event_id){
+    $scope.themsg = "updating";
+    var updateBody = _.pick($scope.edit_event[event_id], 'title','description','tag','event_type','date')
+
+    timelineHelper.updateEvent(event_id, updateBody)
+      .then(function(res){
+        _.find($scope.timelines, function(stage, stg_idx){
+          return _.find(stage.event, function(events, event_idx){
+            if($scope.timelines[stg_idx].event[event_idx].id == event_id){
+              $scope.timelines[stg_idx].event[event_idx] = $scope.edit_event[event_id]
+            }
+            return $scope.timelines[stg_idx].event[event_idx].id == event_id
+          })
+        });
+        $scope.is_edit_event[event_id] = false;
+        $scope.message = "EVENT UPDATED";
+      })
+      .catch(function(err){
+        $scope.error = err.data.message
+      })
+  }
+
   $scope.addStage = function(){
     if ($window.sessionStorage.sid){
       $scope.stageMessage = null;
@@ -73,6 +106,9 @@ function TimelineController($scope, $http, $window, $state, $stateParams, $rootS
 
   $scope.clearMessage = function (){
     $scope.message = null;
+  }
+  $scope.clearError = function(){
+    $scope.error = null;
   }
 
   $rootScope.$on('deleted_stage', function(event, stage_id){
