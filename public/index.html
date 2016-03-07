@@ -56,33 +56,29 @@
     <section ng-controller="UserController">
       <h1 class="text-center "><a ng-if="!token" ui-sref="login" class="sonder">SONDERS</a><a ng-if="token" ui-sref="landing" class="sonder">SONDERS</a></h1>
       <ul class="nav text-center">
-        <li class="pull-left" ng-if="token"><a hui-sref-active="active" ui-sref="landing">HOME</a></li>
-        <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="login">LOGIN</a></li>
-        <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="signup">SIGN UP</a></li>
-        <li class="pull-right" ng-if="!token"><a ui-sref-active="active" ui-sref="browse">BROWSE</a></li>
-        <!-- <li class="pull-left" ng-if="token"><a ui-sref-active="active" ui-sref="graph({timeline_id:currentUser.id})">GRAPH</a></li> -->
-        <li class="dropdown pull-left" ng-if="token">
+
+        <li ng-if="token" class="pull-right">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">PORTAL</a>
           <ul class="dropdown-menu">
-            <li><a ui-sref="editTimeline">EDIT</a></li>
-            <li><a ui-sref="showOne({timeline_id:currentUser.id})">VIEW</a></li>
             <li><a ui-sref="favList({user_id:currentUser.id})">FAVOURITE</a></li>
-          </ul>
-        </li>
-        <li ng-if="token" class="pull-right"><a ng-click="logout()">LOGOUT</a></li>
-        <li class="pull-right"><a ui-sref-active="active" ui-sref="about">ABOUT</a></li>
-        <li ng-if="token" class="pull-right"><a ui-sref="profile">SETTINGS</a></li>
-        <li ng-if="token" class="pull-right">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">HI! {{currentUser.name.toUpperCase().split(" ")[0]}}</a>
-          <ul class="dropdown-menu">
             <li><a ui-sref="profile">SETTINGS</a></li>
             <li><a ng-click="logout()">LOGOUT</a></li>
           </ul>
         </li>
+        <li class="pull-right" ng-if="token"><a hui-sref-active="active" ui-sref="landing">HOME</a></li>
+        <li class="dropdown pull-right" ng-if="token">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{currentUser.name.toUpperCase().split(" ")[0]}}</a>
+          <ul class="dropdown-menu">
+            <li><a ui-sref="showOne({timeline_id:currentUser.id})">TIMELINE VIEW</a></li>
+            <li><a ui-sref="editTimeline">EDIT</a></li>
+          </ul>
+        </li>
+        <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="login">LOGIN</a></li>
+        <li ng-if="!token" class="pull-right"><a ui-sref-active="active" ui-sref="signup">SIGN UP</a></li>
+        <li class="pull-right" ng-if="!token"><a ui-sref-active="active" ui-sref="browse">BROWSE</a></li>
 
-        <!-- <li ng-if="token" class="pull-left"><a ui-sref="editTimeline">EDIT</a></li> -->
-        <!-- <li ng-if="token" class="pull-left"><a ui-sref="showOne({timeline_id:currentUser.id})">VIEW</a></li> -->
-        <!-- <li ng-if="token" class="pull-left"><a ui-sref="favList({user_id:currentUser.id})">FAVOURITE</a></li> -->
+
+
         <li ng-if="token" class="pull-left"><a ui-sref="searchKey">SEARCH</a></li>
       </ul>
       <div ui-view class="view"></div>
