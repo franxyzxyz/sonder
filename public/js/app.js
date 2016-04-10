@@ -69,11 +69,9 @@ function authRoute($httpProvider, $stateProvider, $urlRouterProvider){
     .state('showOne',{
       url: "/timeline/show/:timeline_id",
       templateUrl: "template/timeline/show.html",
-      controller: function($window, $state){
-        if (!$window.sessionStorage.sid){
-          return $state.go('login',{'login':'Oops. You have to login first :D '});
-        }
-      }
+      // controller: function($window, $state){
+      //   if (!$window.sessionStorage.sid){
+      //     return $state.go('login',{'login':'Oops. You have to login first :D '});
     })
     .state('favList',{
       url: "/timeline/my-favourites/:user_id",

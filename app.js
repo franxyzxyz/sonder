@@ -67,7 +67,10 @@ app.use('/api/', expressJWT({secret: process.env.JWT_SECRET}), favouriteRoutes)
 
 var timelineRoutes = require('./api/config/timelineRoutes')
 app.use('/api', expressJWT({secret: process.env.JWT_SECRET}), timelineRoutes)
+// app.use('/api', timelineRoutes)
 
+
+// ADD LOGIC on individual routes (INDEX/SHOW no need JWT but edit/delete need)
 var stageRoutes = require('./api/config/stageRoutes')
 app.use('/api/timeline/', expressJWT({secret: process.env.JWT_SECRET}), stageRoutes)
 
