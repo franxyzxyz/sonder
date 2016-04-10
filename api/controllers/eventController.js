@@ -1,6 +1,7 @@
 var Event       = require('../models/Event')
 var Stage       = require('../models/Stage')
 var Q           = require("q");
+var validation  = require('../helpers/validation')
 
 function getStageEvents(req, res){
   var cypher = "START user = node({id}) "
@@ -20,8 +21,9 @@ function addEvent(req, res){
   var newEvent = req.body;
   newEvent.date = new Date(newEvent.date);
   Stage.read(req.params.stage_id, function(err, stage){
-    Q.nfcall(fieldsValidate, newEvent, stage)
-     .then(function(value){
+
+    Q.nfcall(validation.multipleFields, newEvent, Event.schema, stage, validation.eventDateRange)
+     .then(function(){
       Event.save(newEvent, function(err, event){
         if (err) return res.status(401).json({ success: false, error: err.message });
         db.relate(req.params.stage_id, 'has_event', event.id, function(err, rel){
@@ -36,7 +38,7 @@ function addEvent(req, res){
       })
      })
      .catch(function(error){
-      res.status(401).json({success: false, message: error});
+      res.status(401).json({success: false, message: error.message});
      })
   })
 }
@@ -53,9 +55,12 @@ function updateEvent(req, res){
              + "MATCH stage -[r:has_event]-> event "
              + "RETURN stage, event";
   var updateEvent = req.body;
+  updateEvent.date = new Date(updateEvent.date);
+
   db.query(cypher, {id: parseInt(req.params.event_id)}, function(err, result){
     if (err) return res.status(401).json({ success: false, error: err.message });
-    Q.nfcall(fieldsValidate, updateEvent, result[0].stage)
+
+    Q.nfcall(validation.multipleFields, updateEvent, Event.schema, result[0].stage, validation.eventDateRange)
      .then(function(){
       var event = result[0].event;
 
@@ -84,23 +89,6 @@ function deleteEvent(req, res){
       res.status(200).json({ success: true })
     });
   })
-}
-
-function fieldsValidate(newBody, stage, callback){
-  for (prop in newBody){
-    if (Object.keys(Event.schema).indexOf(prop) == -1) throw 'fields unmatch';
-  }
-  return dateRangeValidate(newBody.date, stage, callback)
-}
-
-function dateRangeValidate(date, stage, callback){
-  if (date < stage.start || date > stage.end) throw 'date of event is out of the range of the requested stage';
-  return dateValidation(date, callback)
-}
-
-function dateValidation(date, callback){
-  if (date == 'Invalid Date') throw 'Invalid Date';
-  callback(null, date)
 }
 
 module.exports = {

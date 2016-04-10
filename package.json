@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "5.0.0",
+    "npm": "3.3.9"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,17 +22,27 @@
   "homepage": "https://github.com/franxyzxyz/sonder#readme",
   "dependencies": {
     "bcrypt": "^0.8.5",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "connect": "^3.4.0",
+    "cors": "^2.7.1",
     "debug": "^2.2.0",
     "dotenv": "^1.2.0",
     "email-regex": "^1.0.0",
     "express": "^4.13.3",
+    "express-jwt": "^3.3.0",
+    "fb": "^0.7.3",
+    "jsonwebtoken": "^5.4.1",
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
+    "node-linkedin": "^0.5.3",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.0.0",
+    "passport-facebook-token": "^3.0.6",
     "passport-local": "^1.0.0",
+    "q": "^1.4.1",
     "seraph": "^0.14.0",
-    "seraph-model": "^0.7.5"
+    "seraph-model": "^0.7.5",
+    "url": "^0.11.0"
   }
 }
