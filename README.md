@@ -10,7 +10,7 @@ User can view a curated list of recommended timeline as their 'timeline' feed.
 
 This is the final project of my Web Development Immersive course in General Assembly Hong Kong.
 
-You can view the website live in [HERE](http://www.sonder.info)
+You can view the website live in [HERE](https://www.sonders.co/)
 
 
 ### How was this built
